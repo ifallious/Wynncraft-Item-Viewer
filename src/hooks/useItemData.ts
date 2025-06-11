@@ -19,16 +19,21 @@ export const useItemData = (): UseItemDataReturn => {
         setLoading(true);
         setError(null);
         
-        const response = await fetch('/api/items');
+        const response = await fetch('https://api.wynncraft.com/v3/item/database?fullResult', {
+          headers: {
+            'User-Agent': 'Wynncraft-Item-Viewer/1.0'
+          }
+        });
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        const data = await response.json();
+        const data = await response.json() as Record<string, WynncraftItem>;
         setItems(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch items');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to fetch items';
+        setError(errorMessage);
         console.error('Error fetching items:', err);
       } finally {
         setLoading(false);
