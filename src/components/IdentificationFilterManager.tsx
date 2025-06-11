@@ -40,10 +40,6 @@ export const IdentificationFilterManager: React.FC<IdentificationFilterManagerPr
     onFiltersChange(filters.filter(f => f.id !== id));
   };
 
-  const updateFilter = (id: string, updates: Partial<IdentificationFilter>) => {
-    onFiltersChange(filters.map(f => f.id === id ? { ...f, ...updates } : f));
-  };
-
   const getOperatorSymbol = (operator: string) => {
     switch (operator) {
       case 'greater': return '>';

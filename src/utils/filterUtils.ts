@@ -188,7 +188,7 @@ export const formatIdentificationName = (key: string): string => {
     .trim();
 };
 
-export const formatIdentification = (key: string, value: any): string => {
+export const formatIdentification = (_key: string, value: any): string => {
   if (typeof value === 'object' && value !== null && 'min' in value && 'max' in value) {
     return `${value.min} to ${value.max}`;
   }

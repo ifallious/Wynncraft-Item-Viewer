@@ -1,5 +1,6 @@
 // Wynncraft Item Types
 interface WynncraftItem {
+  displayName: string;
   internalName: string;
   type: string;
   weaponType?: string;
