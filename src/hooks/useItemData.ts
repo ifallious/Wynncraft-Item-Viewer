@@ -19,11 +19,7 @@ export const useItemData = (): UseItemDataReturn => {
         setLoading(true);
         setError(null);
         
-        const response = await fetch('https://api.wynncraft.com/v3/item/database?fullResult', {
-          headers: {
-            'User-Agent': 'Wynncraft-Item-Viewer/1.0'
-          }
-        });
+        const response = await fetch('/api/items');
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
