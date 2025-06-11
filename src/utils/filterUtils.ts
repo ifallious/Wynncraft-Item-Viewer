@@ -18,6 +18,11 @@ export const filterItems = (items: (WynncraftItem & { displayName: string })[], 
       return false;
     }
 
+    // Attack speed filter
+    if (filters.attackSpeed.length > 0 && (!item.attackSpeed || !filters.attackSpeed.includes(item.attackSpeed))) {
+      return false;
+    }
+
     // Level filter
     if (item.requirements.level < filters.levelMin || item.requirements.level > filters.levelMax) {
       return false;

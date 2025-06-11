@@ -33,7 +33,8 @@ function App() {
     dpsMin: 0,
     dpsMax: 10000,
     damageElements: [],
-    identificationFilters: []
+    identificationFilters: [],
+    attackSpeed: []
   });
 
   const filteredItems = useMemo(() => {

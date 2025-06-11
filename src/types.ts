@@ -83,6 +83,7 @@ interface FilterState {
   dpsMax: number;
   damageElements: string[];
   identificationFilters: IdentificationFilter[];
+  attackSpeed: string[];
 }
 
 // Explicit exports for verbatimModuleSyntax

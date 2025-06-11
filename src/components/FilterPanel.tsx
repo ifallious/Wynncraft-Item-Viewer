@@ -22,6 +22,11 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
   const types = getUniqueValues(items, 'type');
   const rarities = getUniqueValues(items, 'rarity');
   const classRequirements = getUniqueClassRequirements(items);
+  const attackSpeeds = getUniqueValues(items, 'attackSpeed');
+
+  const formatAttackSpeed = (speed: string) => {
+    return speed.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  };
 
   const handleMultiSelectChange = (key: keyof FilterState, value: string) => {
     setFilters(prev => {
@@ -61,7 +66,8 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       dpsMin: 0,
       dpsMax: 10000,
       damageElements: [],
-      identificationFilters: []
+      identificationFilters: [],
+      attackSpeed: []
     });
   };
 
@@ -106,7 +112,23 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                     checked={filters.rarity.includes(rarity)}
                     onChange={() => handleMultiSelectChange('rarity', rarity)}
                   />
-                  {rarity}
+                  {rarity.charAt(0).toUpperCase() + rarity.slice(1)}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="filter-section">
+            <h3>Attack Speed</h3>
+            <div className="checkbox-group">
+              {attackSpeeds.map(speed => (
+                <label key={speed} className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={filters.attackSpeed.includes(speed)}
+                    onChange={() => handleMultiSelectChange('attackSpeed', speed)}
+                  />
+                  {formatAttackSpeed(speed)}
                 </label>
               ))}
             </div>

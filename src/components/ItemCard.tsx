@@ -16,6 +16,10 @@ interface IdentificationValue {
 export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const rarityColor = getRarityColor(item.rarity);
 
+  const formatAttackSpeed = (speed: string) => {
+    return speed.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  };
+
   // Color maps for stats and requirements
   const colorMap: Record<string, string> = {
     health: '#ff5555',
@@ -185,7 +189,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
       </div>
       {/* Attack speed */}
       {item.attackSpeed && (
-        <div style={{ color: '#aaaaaa', marginBottom: 2 }}>{item.attackSpeed} Attack Speed</div>
+        <div style={{ color: '#aaaaaa', marginBottom: 2 }}>{formatAttackSpeed(item.attackSpeed)} Attack Speed</div>
       )}
       {/* Damages with icons */}
       {item.base && (
