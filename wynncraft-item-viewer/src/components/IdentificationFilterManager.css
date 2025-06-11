@@ -1,0 +1,201 @@
+.identification-filter-manager {
+  margin-bottom: 20px;
+}
+
+.identification-filter-manager h4 {
+  margin: 0 0 12px 0;
+  font-size: 1em;
+  color: #55ffff;
+  border-bottom: 1px solid #555;
+  padding-bottom: 4px;
+}
+
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+  min-height: 20px;
+}
+
+.filter-tag {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #333 0%, #444 100%);
+  border: 1px solid #555;
+  border-radius: 16px;
+  padding: 4px 8px 4px 12px;
+  font-size: 0.8em;
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.filter-text {
+  margin-right: 6px;
+  white-space: nowrap;
+}
+
+.remove-filter-btn {
+  background: #ff5555;
+  border: none;
+  color: #ffffff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  padding: 0;
+  margin: 0;
+}
+
+.remove-filter-btn:hover {
+  background: #ff3333;
+}
+
+.add-filter-btn {
+  background: #55ffff;
+  border: none;
+  color: #000000;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: bold;
+  transition: background 0.2s ease;
+  width: 100%;
+}
+
+.add-filter-btn:hover {
+  background: #33dddd;
+}
+
+.add-filter-form {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.form-row {
+  margin-bottom: 12px;
+}
+
+.form-row:last-child {
+  margin-bottom: 0;
+}
+
+.identification-select,
+.operator-select,
+.value-input {
+  width: 100%;
+  padding: 8px;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 0.9em;
+}
+
+.identification-select:focus,
+.operator-select:focus,
+.value-input:focus {
+  outline: none;
+  border-color: #55ffff;
+  box-shadow: 0 0 0 2px rgba(85, 255, 255, 0.2);
+}
+
+.identification-select option,
+.operator-select option {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.form-row:has(.value-input:nth-child(2)) {
+  display: flex;
+  gap: 8px;
+}
+
+.form-row:has(.value-input:nth-child(2)) .value-input {
+  flex: 1;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.confirm-btn {
+  background: #55ff55;
+  border: none;
+  color: #000000;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: bold;
+  transition: background 0.2s ease;
+  flex: 1;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background: #33dd33;
+}
+
+.confirm-btn:disabled {
+  background: #666;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background: #666;
+  border: none;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background 0.2s ease;
+  flex: 1;
+}
+
+.cancel-btn:hover {
+  background: #777;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .filter-tag {
+    font-size: 0.7em;
+    padding: 3px 6px 3px 10px;
+  }
+  
+  .remove-filter-btn {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+  
+  .add-filter-btn {
+    padding: 6px 12px;
+    font-size: 0.8em;
+  }
+  
+  .add-filter-form {
+    padding: 12px;
+  }
+  
+  .identification-select,
+  .operator-select,
+  .value-input {
+    padding: 6px;
+    font-size: 0.8em;
+  }
+}

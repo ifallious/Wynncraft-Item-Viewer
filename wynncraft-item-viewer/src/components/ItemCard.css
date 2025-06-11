@@ -1,0 +1,200 @@
+@font-face {
+  font-family: 'Minecraftia';
+  src: url('/fonts/Minecraftia.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.item-card, .item-card * {
+  font-family: 'Minecraftia', 'Press Start 2P', monospace !important;
+}
+
+/* Wynncraft/Minecraft color classes */
+.wc-red { color: #ff5555; }
+.wc-green { color: #55ff55; }
+.wc-yellow { color: #ffff55; }
+.wc-blue { color: #55aaff; }
+.wc-aqua { color: #55ffff; }
+.wc-purple { color: #aa00aa; }
+.wc-gold { color: #ffb84d; }
+.wc-gray { color: #aaaaaa; }
+.wc-white { color: #ffffff; }
+.wc-orange { color: #ffaa00; }
+
+.wc-percent { font-weight: bold; margin-left: 4px; }
+
+.item-card {
+  background: linear-gradient(135deg, #1a0a1a 0%, #181818 100%);
+  border: 2.5px solid #a855f7;
+  border-radius: 6px;
+  padding: 10px 14px 10px 14px;
+  margin: 8px;
+  box-shadow: 0 0 10px #000a, 0 2px 8px #0008;
+  color: #fff;
+  min-width: 260px;
+  max-width: 340px;
+  font-size: 13px;
+  line-height: 1.5;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-card > div {
+  margin-bottom: 2px;
+}
+
+.item-card .item-name {
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #000, 0 0 2px #000a;
+}
+
+.item-card .item-lore {
+  color: #bcbcbc;
+  font-style: italic;
+  font-size: 12px;
+  margin-top: 8px;
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.item-card .item-rarity {
+  font-weight: bold;
+  font-size: 13px;
+  margin-top: 8px;
+  text-align: left;
+  text-shadow: 1px 1px 0 #000, 0 0 2px #000a;
+}
+
+.item-card .item-major-id {
+  color: #ffb84d;
+  font-weight: bold;
+  font-size: 13px;
+  margin: 2px 0;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .item-card {
+    min-width: 180px;
+    max-width: 98vw;
+    font-size: 11px;
+    padding: 8px 6px;
+  }
+  .item-card .item-name {
+    font-size: 13px;
+  }
+}
+
+.item-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 0 20px rgba(168, 85, 247, 0.5),
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.item-header {
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+  padding-bottom: 6px;
+  text-align: center;
+}
+
+.item-type {
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 6px;
+  margin-right: 3px;
+  display: inline-block;
+}
+
+.item-subtype {
+  color: #9ca3af;
+  font-size: 6px;
+  margin-left: 3px;
+}
+
+.item-requirements h4,
+.item-base-damage h4,
+.item-identifications h4,
+.item-drop-meta h4 {
+  margin: 6px 0 3px 0;
+  font-size: 7px;
+  color: #fbbf24;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+  padding-bottom: 2px;
+  text-shadow:
+    1px 1px 0 #000000,
+    -1px -1px 0 #000000,
+    1px -1px 0 #000000,
+    -1px 1px 0 #000000;
+}
+
+.requirement,
+.base-damage {
+  font-size: 7px;
+  color: #e5e7eb;
+  margin: 1px 0;
+  text-shadow: 1px 1px 0 #000000;
+}
+
+.item-dps {
+  color: #ef4444;
+  font-size: 7px;
+  margin: 3px 0;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #000000;
+}
+
+.item-attack-speed,
+.item-powder-slots {
+  font-size: 6px;
+  color: #9ca3af;
+  margin: 1px 0;
+  text-shadow: 1px 1px 0 #000000;
+}
+
+.identification {
+  display: flex;
+  justify-content: space-between;
+  font-size: 6px;
+  margin: 1px 0;
+  padding: 1px 0;
+}
+
+.id-name {
+  color: #60a5fa;
+  text-shadow: 1px 1px 0 #000000;
+}
+
+.id-value {
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #000000;
+}
+
+.more-ids {
+  font-size: 6px;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 3px;
+  text-shadow: 1px 1px 0 #000000;
+}
+
+.item-drop-meta {
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid #444;
+}
+
+.item-drop-meta div {
+  font-size: 0.8em;
+  color: #aaa;
+  margin: 1px 0;
+}
