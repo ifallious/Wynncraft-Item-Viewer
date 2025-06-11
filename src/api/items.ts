@@ -1,5 +1,3 @@
-import type { APIRoute } from 'astro';
-
 export async function GET() {
   try {
     const response = await fetch('/api/items');
