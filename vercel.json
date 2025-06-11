@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/items",
-      "destination": "/api/items"
+      "destination": "/api/items.ts"
     }
   ],
   "headers": [
