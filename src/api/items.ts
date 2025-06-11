@@ -1,9 +1,8 @@
 import type { APIRoute } from 'astro';
 
-export const GET: APIRoute = async ({ request }) => {
+export async function GET() {
   try {
-    const wynncraftApiUrl = 'https://api.wynncraft.com/v3/item/database?fullResult';
-    const response = await fetch(wynncraftApiUrl);
+    const response = await fetch('/api/items');
     
     if (!response.ok) {
       throw new Error(`Wynncraft API responded with status: ${response.status}`);
@@ -30,4 +29,4 @@ export const GET: APIRoute = async ({ request }) => {
       }
     });
   }
-}; 
+} 

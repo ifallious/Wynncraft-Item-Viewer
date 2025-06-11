@@ -6,10 +6,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': {
-        target: 'https://api.wynncraft.com',
+      '/api/items': {
+        target: 'https://api.wynncraft.com/v3/item/database',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/api\/items/, '') + '?fullResult',
         secure: true,
         headers: {
           'User-Agent': 'Wynncraft-Item-Viewer/1.0'
