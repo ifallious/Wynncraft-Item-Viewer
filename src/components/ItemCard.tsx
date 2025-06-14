@@ -135,7 +135,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
       const numericValue = typeof value === 'number' ? value : (value && typeof value.raw === 'number' ? value.raw : 0);
       return (
         <div key={key} style={{ color: '#aaaaaa', display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span dangerouslySetInnerHTML={{ __html: `<span style="color: ${statColor(numericValue)}">${numericValue > 0 ? '+' : ''}${displayValue}</span> ${formatIdentificationName(key)}` }} />
+          <span><span style={{ color: statColor(numericValue) }}>{numericValue > 0 ? '+' : ''}{displayValue}</span> {formatIdentificationName(key)}</span>
         </div>
       );
     });
@@ -145,9 +145,11 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const renderMajorIds = () => {
     if (!item.majorIds) return null;
     return Object.entries(item.majorIds).map(([key, value]: [string, string]) => (
-      <div key={key} style={{ color: colorMap.major, fontWeight: 'bold' }}>
-        {value}
-      </div>
+      <div 
+        key={key} 
+        style={{ color: colorMap.major, fontWeight: 'bold' }}
+        dangerouslySetInnerHTML={{ __html: value }}
+      />
     ));
   };
 
