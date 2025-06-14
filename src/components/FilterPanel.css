@@ -440,7 +440,7 @@
   padding: 6px 12px;
   background-color: #ffffff05;
   color: #e2e8f0;
-  border: none;
+  border: 1px solid rgba(255,255,255,.05);
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
@@ -449,5 +449,7 @@
 }
 
 .select-major-ids-button:hover {
-  background-color: #555;
+  transform: translateX(4px) scale(1.02);
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.3);
 }
