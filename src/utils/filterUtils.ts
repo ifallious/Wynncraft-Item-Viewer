@@ -193,12 +193,27 @@ export const formatIdentificationName = (key: string): string => {
     .trim();
 };
 
-export const formatIdentification = (_key: string, value: any): string => {
+export const formatIdentification = (key: string, value: number | { min: number; max: number } | { raw?: number; percent?: number } | null): string => {
+  // Special cases that should not have %
+  const noPercentCases = [
+    'poison',
+    'raw',
+    'mana',
+    'defence',
+    'strength',
+    'dexterity',
+    'intelligence',
+    'agility',
+  ];
+
+  // Check if the key contains any of the no-percent cases
+  const shouldNotAddPercent = noPercentCases.some(case_ => key.toLowerCase().includes(case_));
+
   if (typeof value === 'object' && value !== null && 'min' in value && 'max' in value) {
-    return `${value.min} to ${value.max}`;
+    return `${value.min} to ${value.max}${shouldNotAddPercent ? '' : '%'}`;
   }
   if (typeof value === 'number') {
-    return value.toString();
+    return `${value}${shouldNotAddPercent ? '' : '%'}`;
   }
   return String(value);
 };
