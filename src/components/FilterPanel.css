@@ -399,7 +399,7 @@
 .checkbox-group > *, .range-group > * {
   opacity: 0;
   transform: translateY(10px);
-  animation: staggerFadeIn 0.1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: staggerFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .checkbox-group > *:nth-child(1), .range-group > *:nth-child(1) { animation-delay: 0.03s; }
