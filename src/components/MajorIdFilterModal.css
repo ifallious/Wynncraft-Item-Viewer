@@ -13,7 +13,7 @@
 }
 
 .modal-content {
-  background-color: #1a1a1a;
+  background-color: linear-gradient(135deg,#0f172a,#1e293b);;
   border-radius: 4px;
   padding: 16px;
   width: 90%;
