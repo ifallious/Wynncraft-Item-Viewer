@@ -50,12 +50,20 @@ export const IdentificationFilterManager: React.FC<IdentificationFilterManagerPr
     }
   };
 
+  const formatIdentificationName = (name: string) => {
+    // Add space before each capitalized letter and capitalize first letter
+    return name
+      .replace(/([A-Z])/g, ' $1') // Add space before each capital letter
+      .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
+      .trim(); // Remove any leading/trailing spaces
+  };
+
   const formatFilterDisplay = (filter: IdentificationFilter) => {
     const symbol = getOperatorSymbol(filter.operator);
     if (filter.operator === 'range' && filter.maxValue !== undefined) {
-      return `${filter.name} ${filter.value} ${symbol} ${filter.maxValue}`;
+      return `${formatIdentificationName(filter.name)} ${filter.value} ${symbol} ${filter.maxValue}`;
     }
-    return `${filter.name} ${symbol} ${filter.value}`;
+    return `${formatIdentificationName(filter.name)} ${symbol} ${filter.value}`;
   };
 
   return (
@@ -99,7 +107,7 @@ export const IdentificationFilterManager: React.FC<IdentificationFilterManagerPr
             >
               <option value="">Select Identification</option>
               {availableIdentifications.map(id => (
-                <option key={id} value={id}>{id}</option>
+                <option key={id} value={id}>{formatIdentificationName(id)}</option>
               ))}
             </select>
           </div>

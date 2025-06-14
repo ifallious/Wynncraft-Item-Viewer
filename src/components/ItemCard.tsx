@@ -135,7 +135,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
       const numericValue = typeof value === 'number' ? value : (value && typeof value.raw === 'number' ? value.raw : 0);
       return (
         <div key={key} style={{ color: '#aaaaaa', display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span><span style={{ color: statColor(numericValue) }}>{numericValue > 0 ? '+' : ''}{displayValue}</span> {formatIdentificationName(key)}</span>
+          <span dangerouslySetInnerHTML={{ __html: `<span style="color: ${statColor(numericValue)}">${numericValue > 0 ? '+' : ''}${displayValue}</span> ${formatIdentificationName(key)}` }} />
         </div>
       );
     });
