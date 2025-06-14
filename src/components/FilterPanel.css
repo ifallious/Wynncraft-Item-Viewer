@@ -135,10 +135,6 @@
   transition: color 0.3s ease;
 }
 
-.filter-section h3:hover {
-  color: #a78bfa;
-}
-
 .filter-section h4 {
   margin: 12px 0 8px 0;
   font-size: 0.95em;
@@ -388,10 +384,6 @@
   font-size: 12px;
   color: #666;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.filter-section-header:hover .toggle-icon {
-  transform: rotate(180deg);
 }
 
 @keyframes fadeIn {
