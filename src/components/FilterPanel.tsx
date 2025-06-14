@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import type { FilterState, WynncraftItem } from '../types.js';
-import { getUniqueValues, getUniqueClassRequirements, getAllIdentificationNames, getDamageElements } from '../utils/filterUtils.js';
+import { getUniqueValues, getUniqueClassRequirements, getAllIdentificationNames, getDamageElements, getAllMajorIds } from '../utils/filterUtils.js';
 import { IdentificationFilterManager } from './IdentificationFilterManager.js';
+import { MajorIdFilterModal } from './MajorIdFilterModal.js';
 import './FilterPanel.css';
 
 interface FilterPanelProps {
@@ -32,6 +33,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     specialFilters: false,
     damageElements: false
   });
+  const [showMajorIdModal, setShowMajorIdModal] = useState(false);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({
@@ -83,6 +85,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       agilityMax: 150,
       hasIdentifications: false,
       hasMajorIds: false,
+      selectedMajorIds: [],
       powderSlots: [],
       dpsMin: 0,
       dpsMax: 1300,
@@ -455,6 +458,14 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                   />
                   Has Major IDs
                 </label>
+                {filters.hasMajorIds && (
+                  <button 
+                    className="select-major-ids-button"
+                    onClick={() => setShowMajorIdModal(true)}
+                  >
+                    Select Major IDs
+                  </button>
+                )}
               </>
             )}
           </div>
@@ -486,6 +497,14 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </div>
         </div>
       )}
+
+      <MajorIdFilterModal
+        isOpen={showMajorIdModal}
+        onClose={() => setShowMajorIdModal(false)}
+        selectedMajorIds={filters.selectedMajorIds}
+        availableMajorIds={getAllMajorIds(items)}
+        onMajorIdsChange={(selectedMajorIds) => setFilters(prev => ({ ...prev, selectedMajorIds }))}
+      />
     </div>
   );
 };

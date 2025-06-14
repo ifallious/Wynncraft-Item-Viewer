@@ -78,6 +78,7 @@ interface FilterState {
   agilityMax: number;
   hasIdentifications: boolean;
   hasMajorIds: boolean;
+  selectedMajorIds: string[];
   powderSlots: string[];
   dpsMin: number;
   dpsMax: number;

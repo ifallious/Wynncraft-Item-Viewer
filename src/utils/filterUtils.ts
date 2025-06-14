@@ -58,6 +58,15 @@ export const filterItems = (items: (WynncraftItem & { displayName: string })[], 
       return false;
     }
 
+    // Selected Major IDs filter
+    if (filters.selectedMajorIds.length > 0) {
+      if (!item.majorIds) return false;
+      const itemMajorIds = Object.keys(item.majorIds);
+      if (!filters.selectedMajorIds.every(id => itemMajorIds.includes(id))) {
+        return false;
+      }
+    }
+
     // Powder slots filter
     if (filters.powderSlots.length > 0 && !filters.powderSlots.includes((item.powderSlots || 0).toString())) {
       return false;
@@ -288,4 +297,18 @@ export const getAllIdentificationNames = (items: (WynncraftItem & { displayName:
 
 export const getDamageElements = (): string[] => {
   return ['neutral', 'earth', 'thunder', 'water', 'fire', 'air'];
+};
+
+export const getAllMajorIds = (items: (WynncraftItem & { displayName: string })[]): string[] => {
+  const majorIds = new Set<string>();
+
+  items.forEach(item => {
+    if (item.majorIds) {
+      Object.keys(item.majorIds).forEach(key => {
+        majorIds.add(key);
+      });
+    }
+  });
+
+  return Array.from(majorIds).sort();
 };
