@@ -144,9 +144,9 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   // Render major IDs
   const renderMajorIds = () => {
     if (!item.majorIds) return null;
-    return Object.entries(item.majorIds).map(([key]: [string, unknown]) => (
+    return Object.entries(item.majorIds).map(([key, value]: [string, string]) => (
       <div key={key} style={{ color: colorMap.major, fontWeight: 'bold' }}>
-        {key}
+        {value}
       </div>
     ));
   };
