@@ -29,9 +29,10 @@ function App() {
     agilityMax: 150,
     hasIdentifications: false,
     hasMajorIds: false,
+    selectedMajorIds: [],
     powderSlots: [],
     dpsMin: 0,
-    dpsMax: 10000,
+    dpsMax: 1300,
     damageElements: [],
     identificationFilters: [],
     attackSpeed: []
