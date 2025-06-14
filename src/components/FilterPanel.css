@@ -386,6 +386,39 @@
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.filter-section-content {
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-section-content > * {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: staggerFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.filter-section-content > *:nth-child(1) { animation-delay: 0.05s; }
+.filter-section-content > *:nth-child(2) { animation-delay: 0.1s; }
+.filter-section-content > *:nth-child(3) { animation-delay: 0.15s; }
+.filter-section-content > *:nth-child(4) { animation-delay: 0.2s; }
+.filter-section-content > *:nth-child(5) { animation-delay: 0.25s; }
+.filter-section-content > *:nth-child(6) { animation-delay: 0.3s; }
+.filter-section-content > *:nth-child(7) { animation-delay: 0.35s; }
+.filter-section-content > *:nth-child(8) { animation-delay: 0.4s; }
+.filter-section-content > *:nth-child(9) { animation-delay: 0.45s; }
+.filter-section-content > *:nth-child(10) { animation-delay: 0.5s; }
+
+@keyframes staggerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
