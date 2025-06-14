@@ -30,7 +30,7 @@ export const ItemGrid: React.FC<ItemGridProps> = ({ items }) => {
           bValue = b.requirements.level;
           break;
         case 'rarity':
-          const rarityOrder = { 'common': 1, 'unique': 2, 'rare': 3, 'legendary': 4, 'fabled': 5, 'mythic': 6, 'set': 7 };
+          const rarityOrder = { 'common': 1, 'set': 2, 'unique': 3, 'rare': 4, 'legendary': 5, 'fabled': 6, 'mythic': 7 };
           aValue = rarityOrder[a.rarity as keyof typeof rarityOrder] || 0;
           bValue = rarityOrder[b.rarity as keyof typeof rarityOrder] || 0;
           break;
