@@ -154,6 +154,7 @@
 .checkbox-group {
   display: flex;
   flex-direction: column;
+  margin-top: 8px;
   gap: 8px;
 }
 
@@ -222,6 +223,7 @@
 .range-group {
   display: flex;
   flex-direction: column;
+  margin-top: 8px;
   gap: 12px;
   padding: 16px;
   background: rgba(255, 255, 255, 0.02);
