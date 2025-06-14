@@ -53,7 +53,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const renderRequirements = () => {
     const reqs: React.ReactElement[] = [];
     const reqsData = [
-      { label: 'Quest Req', value: item.requirements.classRequirement },
+      { label: 'Class Req', value: item.requirements.classRequirement },
       { label: 'Combat Lv. Min', value: item.requirements.level },
       { label: 'Strength Min', value: item.requirements.strength },
       { label: 'Dexterity Min', value: item.requirements.dexterity },
@@ -244,17 +244,21 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
       )}
       {/* Average DPS */}
       {item.averageDps && (
-        <div style={{ color: '#aaaaaa', marginBottom: 2 }}>
+        <div style={{ color: '#aaaaaa', marginBottom: 8 }}>
           Average DPS: {item.averageDps}
         </div>
       )}
       {/* Requirements */}
-      {renderRequirements()}
+      <div style={{ marginBottom: 8 }}>
+        {renderRequirements()}
+      </div>
       {/* Base stats (health, defenses) */}
       {renderBaseStats()}
       {/* Identifications (no percent) */}
       {item.identifications && Object.keys(item.identifications).length > 0 && (
-        renderIdentifications()
+        <div style={{ marginBottom: 8 }}>
+          {renderIdentifications()}
+        </div>
       )}
       {/* Major IDs */}
       {renderMajorIds()}
