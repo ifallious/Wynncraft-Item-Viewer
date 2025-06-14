@@ -77,7 +77,7 @@ export const filterItems = (items: (WynncraftItem & { displayName: string })[], 
       if (item.averageDps < filters.dpsMin || item.averageDps > filters.dpsMax) {
         return false;
       }
-    } else if (filters.dpsMin > 0 || filters.dpsMax < 10000) {
+    } else if (filters.dpsMin > 0 || filters.dpsMax < 1300) {
       // If item has no DPS but we're filtering for DPS, exclude it
       return false;
     }
