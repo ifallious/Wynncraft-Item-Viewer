@@ -253,10 +253,12 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
         {renderRequirements()}
       </div>
       {/* Base stats (health, defenses) */}
-      {renderBaseStats()}
+      <div style={{ marginBottom: 8}}>
+        {renderBaseStats()}
+      </div>
       {/* Identifications (no percent) */}
       {item.identifications && Object.keys(item.identifications).length > 0 && (
-        <div style={{ marginBottom: 8 }}>
+        <div style={{ marginBottom: 8}}>
           {renderIdentifications()}
         </div>
       )}
