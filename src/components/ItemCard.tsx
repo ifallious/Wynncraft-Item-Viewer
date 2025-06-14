@@ -130,28 +130,12 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   // Render identifications in Wynncraft style
   const renderIdentifications = () => {
     if (!item.identifications) return null;
-
-    // Special cases that should not have %
-    const noPercentCases = [
-      'poison',
-      'raw',
-      'mana',
-      'defence',
-      'strength',
-      'dexterity',
-      'intelligence',
-      'agility'
-    ];
-
     return Object.entries(item.identifications).map(([key, value]: [string, IdentificationValue | number]) => {
       const displayValue = formatIdentification(key, value);
       const numericValue = typeof value === 'number' ? value : (value && typeof value.raw === 'number' ? value.raw : 0);
-      const shouldNotAddPercent = noPercentCases.some(case_ => key.toLowerCase().includes(case_));
-      const formattedValue = `${numericValue > 0 ? '+' : ''}${displayValue}${shouldNotAddPercent ? '' : '%'}`;
-      
       return (
         <div key={key} style={{ color: '#aaaaaa', display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span><span style={{ color: statColor(numericValue) }}>{formattedValue}</span> {formatIdentificationName(key)}</span>
+          <span><span style={{ color: statColor(numericValue) }}>{numericValue > 0 ? '+' : ''}{displayValue}</span> {formatIdentificationName(key)}</span>
         </div>
       );
     });
