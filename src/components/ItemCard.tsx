@@ -182,7 +182,17 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   };
 
   return (
-    <div className="item-card" style={{ borderColor: rarityColor, minWidth: 260, maxWidth: 340, fontSize: 13, fontFamily: 'Minecraftia, monospace' }}>
+    <div 
+      className="item-card" 
+      style={{ 
+        borderColor: rarityColor, 
+        minWidth: 260, 
+        maxWidth: 340, 
+        fontSize: 13, 
+        fontFamily: 'Minecraftia, monospace',
+        '--rarity-color': rarityColor
+      } as React.CSSProperties}
+    >
       {/* Name (no percent) */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
         <span style={{ color: rarityColor, fontWeight: 'bold', fontSize: 16 }}>{item.displayName}</span>
