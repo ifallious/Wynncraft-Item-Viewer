@@ -49,6 +49,10 @@
   display: none;
 }
 
+.filter-panel.closed .filter-header {
+  padding: 12px;
+}
+
 .toggle-button {
   background: rgba(139, 92, 246, 0.1);
   border: none;
@@ -78,6 +82,10 @@
 
 .filter-content {
   padding: 24px;
+}
+
+.filter-panel.closed .filter-content {
+  padding: 12px;
 }
 
 .reset-button {
@@ -110,10 +118,9 @@
   padding-bottom: 24px;
 }
 
-.filter-section:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
+.filter-panel.closed .filter-section {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
 }
 
 .filter-section h3 {
@@ -347,7 +354,12 @@
   align-items: center;
   cursor: pointer;
   padding: 8px 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
+}
+
+.filter-panel.closed .filter-section-header {
+  padding: 4px 0;
 }
 
 .filter-section-header:hover {
