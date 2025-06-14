@@ -495,16 +495,15 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               </>
             )}
           </div>
+          <MajorIdFilterModal
+            isOpen={showMajorIdModal}
+            onClose={() => setShowMajorIdModal(false)}
+            selectedMajorIds={filters.selectedMajorIds}
+            availableMajorIds={getAllMajorIds(items)}
+            onMajorIdsChange={(selectedMajorIds) => setFilters(prev => ({ ...prev, selectedMajorIds }))}
+          />
         </div>
       )}
-
-      <MajorIdFilterModal
-        isOpen={showMajorIdModal}
-        onClose={() => setShowMajorIdModal(false)}
-        selectedMajorIds={filters.selectedMajorIds}
-        availableMajorIds={getAllMajorIds(items)}
-        onMajorIdsChange={(selectedMajorIds) => setFilters(prev => ({ ...prev, selectedMajorIds }))}
-      />
     </div>
   );
 };
