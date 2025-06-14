@@ -64,7 +64,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       hasMajorIds: false,
       powderSlots: [],
       dpsMin: 0,
-      dpsMax: 10000,
+      dpsMax: 1300,
       damageElements: [],
       identificationFilters: [],
       attackSpeed: []
@@ -119,16 +119,16 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </div>
 
           <div className="filter-section">
-            <h3>Attack Speed</h3>
+            <h3>Class Requirement</h3>
             <div className="checkbox-group">
-              {attackSpeeds.map(speed => (
-                <label key={speed} className="checkbox-label">
+              {classRequirements.map(classReq => (
+                <label key={classReq} className="checkbox-label">
                   <input
                     type="checkbox"
-                    checked={filters.attackSpeed.includes(speed)}
-                    onChange={() => handleMultiSelectChange('attackSpeed', speed)}
+                    checked={filters.classRequirement.includes(classReq)}
+                    onChange={() => handleMultiSelectChange('classRequirement', classReq)}
                   />
-                  {formatAttackSpeed(speed)}
+                  {classReq}
                 </label>
               ))}
             </div>
@@ -161,21 +161,75 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </div>
 
           <div className="filter-section">
-            <h3>Class Requirement</h3>
+            <IdentificationFilterManager
+              filters={filters.identificationFilters}
+              availableIdentifications={getAllIdentificationNames(items)}
+              onFiltersChange={(identificationFilters) =>
+                setFilters(prev => ({ ...prev, identificationFilters }))
+              }
+            />
+          </div>
+
+          <div className="filter-section">
+            <h3>Attack Speed</h3>
             <div className="checkbox-group">
-              {classRequirements.map(classReq => (
-                <label key={classReq} className="checkbox-label">
+              {attackSpeeds.map(speed => (
+                <label key={speed} className="checkbox-label">
                   <input
                     type="checkbox"
-                    checked={filters.classRequirement.includes(classReq)}
-                    onChange={() => handleMultiSelectChange('classRequirement', classReq)}
+                    checked={filters.attackSpeed.includes(speed)}
+                    onChange={() => handleMultiSelectChange('attackSpeed', speed)}
                   />
-                  {classReq}
+                  {formatAttackSpeed(speed)}
+                </label>
+              ))}
+            </div>
+          </div>
+          
+          <div className="filter-section">
+            <h3>Powder Slots</h3>
+            <div className="checkbox-group">
+              {[0, 1, 2, 3, 4, 5].map(slots => (
+                <label key={slots} className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={filters.powderSlots.includes(slots.toString())}
+                    onChange={() => handleMultiSelectChange('powderSlots', slots.toString())}
+                  />
+                  {slots} slots
                 </label>
               ))}
             </div>
           </div>
 
+          <div className="filter-section">
+            <h3>Average DPS</h3>
+            <div className="range-group">
+              <label>
+                Min DPS: {filters.dpsMin}
+                <input
+                  type="range"
+                  min="0"
+                  max="1300"
+                  step="10"
+                  value={filters.dpsMin}
+                  onChange={(e) => handleRangeChange('dpsMin', parseInt(e.target.value))}
+                />
+              </label>
+              <label>
+                Max DPS: {filters.dpsMax}
+                <input
+                  type="range"
+                  min="0"
+                  max="1300"
+                  step="10"
+                  value={filters.dpsMax}
+                  onChange={(e) => handleRangeChange('dpsMax', parseInt(e.target.value))}
+                />
+              </label>
+            </div>
+          </div>
+          
           <div className="filter-section">
             <h3>Skill Points</h3>
             
@@ -331,50 +385,6 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </div>
 
           <div className="filter-section">
-            <h3>Powder Slots</h3>
-            <div className="checkbox-group">
-              {[0, 1, 2, 3, 4, 5].map(slots => (
-                <label key={slots} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={filters.powderSlots.includes(slots.toString())}
-                    onChange={() => handleMultiSelectChange('powderSlots', slots.toString())}
-                  />
-                  {slots} slots
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="filter-section">
-            <h3>DPS Range</h3>
-            <div className="range-group">
-              <label>
-                Min DPS: {filters.dpsMin}
-                <input
-                  type="range"
-                  min="0"
-                  max="10000"
-                  step="10"
-                  value={filters.dpsMin}
-                  onChange={(e) => handleRangeChange('dpsMin', parseInt(e.target.value))}
-                />
-              </label>
-              <label>
-                Max DPS: {filters.dpsMax}
-                <input
-                  type="range"
-                  min="0"
-                  max="10000"
-                  step="10"
-                  value={filters.dpsMax}
-                  onChange={(e) => handleRangeChange('dpsMax', parseInt(e.target.value))}
-                />
-              </label>
-            </div>
-          </div>
-
-          <div className="filter-section">
             <h3>Damage Elements (Exact Match)</h3>
             <p className="filter-description">
               Shows items with exactly the selected elements only
@@ -391,16 +401,6 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                 </label>
               ))}
             </div>
-          </div>
-
-          <div className="filter-section">
-            <IdentificationFilterManager
-              filters={filters.identificationFilters}
-              availableIdentifications={getAllIdentificationNames(items)}
-              onFiltersChange={(identificationFilters) =>
-                setFilters(prev => ({ ...prev, identificationFilters }))
-              }
-            />
           </div>
         </div>
       )}
