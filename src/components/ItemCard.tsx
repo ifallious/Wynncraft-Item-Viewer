@@ -232,6 +232,12 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
           )}
         </div>
       )}
+      {/* Average DPS */}
+      {item.averageDps && (
+        <div style={{ color: '#aaaaaa', marginBottom: 2 }}>
+          Average DPS: {item.averageDps}
+        </div>
+      )}
       {/* Requirements */}
       {renderRequirements()}
       {/* Base stats (health, defenses) */}
