@@ -327,6 +327,13 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                     {slots} slots
                   </button>
                 ))}
+                <button
+                  key="6+"
+                  className={`filter-button ${filters.powderSlots.includes('6+') ? 'active' : ''}`}
+                  onClick={() => handleMultiSelectChange('powderSlots', '6+')}
+                >
+                  6+ slots
+                </button>
               </div>
             )}
           </div>

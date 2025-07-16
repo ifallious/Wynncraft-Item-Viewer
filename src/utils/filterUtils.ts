@@ -81,8 +81,18 @@ export const filterItems = (items: (WynncraftItem & { displayName: string })[], 
     }
 
     // Powder slots filter
-    if (filters.powderSlots.length > 0 && !filters.powderSlots.includes((item.powderSlots || 0).toString())) {
-      return false;
+    if (filters.powderSlots.length > 0) {
+      const itemPowderSlots = item.powderSlots || 0;
+      const matchesPowderSlots = filters.powderSlots.some(filterSlots => {
+        if (filterSlots === '6+') {
+          return itemPowderSlots >= 6;
+        }
+        return itemPowderSlots.toString() === filterSlots;
+      });
+
+      if (!matchesPowderSlots) {
+        return false;
+      }
     }
 
     // DPS filter
