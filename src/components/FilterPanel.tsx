@@ -131,16 +131,15 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               <span className="toggle-icon">{expandedSections.itemType ? '▼' : '▶'}</span>
             </div>
             {expandedSections.itemType && (
-              <div className="checkbox-group">
+              <div className="filter-buttons">
                 {types.map(type => (
-                  <label key={type} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={filters.type.includes(type)}
-                      onChange={() => handleMultiSelectChange('type', type)}
-                    />
+                  <button
+                    key={type}
+                    className={`filter-button ${filters.type.includes(type) ? 'active' : ''}`}
+                    onClick={() => handleMultiSelectChange('type', type)}
+                  >
                     {type}
-                  </label>
+                  </button>
                 ))}
               </div>
             )}
@@ -152,16 +151,15 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               <span className="toggle-icon">{expandedSections.rarity ? '▼' : '▶'}</span>
             </div>
             {expandedSections.rarity && (
-              <div className="checkbox-group">
+              <div className="filter-buttons">
                 {rarities.map(rarity => (
-                  <label key={rarity} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={filters.rarity.includes(rarity)}
-                      onChange={() => handleMultiSelectChange('rarity', rarity)}
-                    />
+                  <button
+                    key={rarity}
+                    className={`filter-button ${filters.rarity.includes(rarity) ? 'active' : ''}`}
+                    onClick={() => handleMultiSelectChange('rarity', rarity)}
+                  >
                     {rarity.charAt(0).toUpperCase() + rarity.slice(1)}
-                  </label>
+                  </button>
                 ))}
               </div>
             )}
@@ -302,16 +300,15 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               <span className="toggle-icon">{expandedSections.attackSpeed ? '▼' : '▶'}</span>
             </div>
             {expandedSections.attackSpeed && (
-              <div className="checkbox-group">
+              <div className="filter-buttons">
                 {attackSpeeds.map(speed => (
-                  <label key={speed} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={filters.attackSpeed.includes(speed)}
-                      onChange={() => handleMultiSelectChange('attackSpeed', speed)}
-                    />
+                  <button
+                    key={speed}
+                    className={`filter-button ${filters.attackSpeed.includes(speed) ? 'active' : ''}`}
+                    onClick={() => handleMultiSelectChange('attackSpeed', speed)}
+                  >
                     {formatAttackSpeed(speed)}
-                  </label>
+                  </button>
                 ))}
               </div>
             )}
@@ -323,16 +320,15 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               <span className="toggle-icon">{expandedSections.powderSlots ? '▼' : '▶'}</span>
             </div>
             {expandedSections.powderSlots && (
-              <div className="checkbox-group">
+              <div className="filter-buttons">
                 {[0, 1, 2, 3, 4, 5].map(slots => (
-                  <label key={slots} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={filters.powderSlots.includes(slots.toString())}
-                      onChange={() => handleMultiSelectChange('powderSlots', slots.toString())}
-                    />
+                  <button
+                    key={slots}
+                    className={`filter-button ${filters.powderSlots.includes(slots.toString()) ? 'active' : ''}`}
+                    onClick={() => handleMultiSelectChange('powderSlots', slots.toString())}
+                  >
                     {slots} slots
-                  </label>
+                  </button>
                 ))}
               </div>
             )}
@@ -518,22 +514,20 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             </div>
             {expandedSections.specialFilters && (
               <>
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={filters.hasIdentifications}
-                    onChange={(e) => setFilters(prev => ({ ...prev, hasIdentifications: e.target.checked }))}
-                  />
-                  Has Identifications
-                </label>
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={filters.hasMajorIds}
-                    onChange={(e) => setFilters(prev => ({ ...prev, hasMajorIds: e.target.checked }))}
-                  />
-                  Has Major IDs
-                </label>
+                <div className="filter-buttons">
+                  <button
+                    className={`filter-button ${filters.hasIdentifications ? 'active' : ''}`}
+                    onClick={() => setFilters(prev => ({ ...prev, hasIdentifications: !prev.hasIdentifications }))}
+                  >
+                    Has Identifications
+                  </button>
+                  <button
+                    className={`filter-button ${filters.hasMajorIds ? 'active' : ''}`}
+                    onClick={() => setFilters(prev => ({ ...prev, hasMajorIds: !prev.hasMajorIds }))}
+                  >
+                    Has Major IDs
+                  </button>
+                </div>
                 {filters.hasMajorIds && (
                   <button 
                     className="select-major-ids-button"
@@ -556,16 +550,15 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                 <p className="filter-description">
                   Shows items with exactly the selected elements only
                 </p>
-                <div className="checkbox-group">
+                <div className="filter-buttons">
                   {getDamageElements().map(element => (
-                    <label key={element} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={filters.damageElements.includes(element)}
-                        onChange={() => handleMultiSelectChange('damageElements', element)}
-                      />
+                    <button
+                      key={element}
+                      className={`filter-button ${filters.damageElements.includes(element) ? 'active' : ''}`}
+                      onClick={() => handleMultiSelectChange('damageElements', element)}
+                    >
                       {element.charAt(0).toUpperCase() + element.slice(1)}
-                    </label>
+                    </button>
                   ))}
                 </div>
               </>
