@@ -65,7 +65,9 @@ interface FilterState {
   rarity: string[];
   levelMin: number;
   levelMax: number;
-  classRequirement: string[];
+  weaponTypes: string[];
+  armourTypes: string[];
+  accessoryTypes: string[];
   strengthMin: number;
   strengthMax: number;
   dexterityMin: number;

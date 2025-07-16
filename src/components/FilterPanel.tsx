@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import type { FilterState, WynncraftItem } from '../types.js';
-import { getUniqueValues, getUniqueClassRequirements, getAllIdentificationNames, getDamageElements, getAllMajorIds } from '../utils/filterUtils.js';
+import { getUniqueValues, getUniqueWeaponTypes, getUniqueArmourTypes, getUniqueAccessoryTypes, getAllIdentificationNames, getDamageElements, getAllMajorIds } from '../utils/filterUtils.js';
 import { IdentificationFilterManager } from './IdentificationFilterManager.js';
 import { MajorIdFilterModal } from './MajorIdFilterModal.js';
+import ColoredIcon from './ColoredIcon.js';
 import './FilterPanel.css';
 
 interface FilterPanelProps {
@@ -23,7 +24,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     itemType: false,
     rarity: false,
-    classRequirement: false,
+    itemTypes: false,
     levelRange: false,
     identifications: false,
     attackSpeed: false,
@@ -44,7 +45,9 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
 
   const types = getUniqueValues(items, 'type');
   const rarities = getUniqueValues(items, 'rarity');
-  const classRequirements = getUniqueClassRequirements(items);
+  const weaponTypes = getUniqueWeaponTypes(items);
+  const armourTypes = getUniqueArmourTypes(items);
+  const accessoryTypes = getUniqueAccessoryTypes(items);
   const attackSpeeds = getUniqueValues(items, 'attackSpeed');
 
   const formatAttackSpeed = (speed: string) => {
@@ -65,6 +68,16 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
+  const handleItemTypeToggle = (category: 'weaponTypes' | 'armourTypes' | 'accessoryTypes', value: string) => {
+    setFilters(prev => {
+      const currentArray = prev[category];
+      const newArray = currentArray.includes(value)
+        ? currentArray.filter(item => item !== value)
+        : [...currentArray, value];
+      return { ...prev, [category]: newArray };
+    });
+  };
+
   const resetFilters = () => {
     setFilters({
       search: '',
@@ -72,7 +85,9 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       rarity: [],
       levelMin: 1,
       levelMax: 110,
-      classRequirement: [],
+      weaponTypes: [],
+      armourTypes: [],
+      accessoryTypes: [],
       strengthMin: 0,
       strengthMax: 150,
       dexterityMin: 0,
@@ -153,22 +168,83 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </div>
 
           <div className="filter-section">
-            <div className="filter-section-header" onClick={() => toggleSection('classRequirement')}>
-              <h3>Class Requirement</h3>
-              <span className="toggle-icon">{expandedSections.classRequirement ? '▼' : '▶'}</span>
+            <div className="filter-section-header" onClick={() => toggleSection('itemTypes')}>
+              <h3>Item Types</h3>
+              <span className="toggle-icon">{expandedSections.itemTypes ? '▼' : '▶'}</span>
             </div>
-            {expandedSections.classRequirement && (
-              <div className="checkbox-group">
-                {classRequirements.map(classReq => (
-                  <label key={classReq} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={filters.classRequirement.includes(classReq)}
-                      onChange={() => handleMultiSelectChange('classRequirement', classReq)}
-                    />
-                    {classReq}
-                  </label>
-                ))}
+            {expandedSections.itemTypes && (
+              <div className="item-type-filters">
+                {/* Weapons */}
+                {weaponTypes.length > 0 && (
+                  <div className="item-type-category">
+                    <h4>Weapons</h4>
+                    <div className="item-type-buttons">
+                      {weaponTypes.map(weaponType => (
+                        <button
+                          key={weaponType}
+                          className={`item-type-button ${filters.weaponTypes.includes(weaponType) ? 'active' : ''}`}
+                          onClick={() => handleItemTypeToggle('weaponTypes', weaponType)}
+                          title={weaponType.charAt(0).toUpperCase() + weaponType.slice(1)}
+                        >
+                          <ColoredIcon
+                            iconName={weaponType}
+                            color={filters.weaponTypes.includes(weaponType) ? '#8b5cf6' : '#64748b'}
+                            size={24}
+                          />
+                          <span>{weaponType.charAt(0).toUpperCase() + weaponType.slice(1)}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Armor */}
+                {armourTypes.length > 0 && (
+                  <div className="item-type-category">
+                    <h4>Armor</h4>
+                    <div className="item-type-buttons">
+                      {armourTypes.map(armourType => (
+                        <button
+                          key={armourType}
+                          className={`item-type-button ${filters.armourTypes.includes(armourType) ? 'active' : ''}`}
+                          onClick={() => handleItemTypeToggle('armourTypes', armourType)}
+                          title={armourType.charAt(0).toUpperCase() + armourType.slice(1)}
+                        >
+                          <ColoredIcon
+                            iconName={armourType}
+                            color={filters.armourTypes.includes(armourType) ? '#8b5cf6' : '#64748b'}
+                            size={24}
+                          />
+                          <span>{armourType.charAt(0).toUpperCase() + armourType.slice(1)}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Accessories */}
+                {accessoryTypes.length > 0 && (
+                  <div className="item-type-category">
+                    <h4>Accessories</h4>
+                    <div className="item-type-buttons">
+                      {accessoryTypes.map(accessoryType => (
+                        <button
+                          key={accessoryType}
+                          className={`item-type-button ${filters.accessoryTypes.includes(accessoryType) ? 'active' : ''}`}
+                          onClick={() => handleItemTypeToggle('accessoryTypes', accessoryType)}
+                          title={accessoryType.charAt(0).toUpperCase() + accessoryType.slice(1)}
+                        >
+                          <ColoredIcon
+                            iconName={accessoryType}
+                            color={filters.accessoryTypes.includes(accessoryType) ? '#8b5cf6' : '#64748b'}
+                            size={24}
+                          />
+                          <span>{accessoryType.charAt(0).toUpperCase() + accessoryType.slice(1)}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

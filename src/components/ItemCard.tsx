@@ -1,6 +1,6 @@
 import React from 'react';
 import type { WynncraftItem } from '../types.js';
-import { getRarityColor, formatDamage, formatIdentification, formatIdentificationName } from '../utils/filterUtils.js';
+import { getRarityColor, formatDamage, formatIdentification, formatIdentificationName, getItemTypeInfo } from '../utils/filterUtils.js';
 import './ItemCard.css';
 import ColoredIcon from './ColoredIcon';
 
@@ -173,6 +173,23 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
     );
   };
 
+  // Render item type
+  const renderItemType = () => {
+    const typeInfo = getItemTypeInfo(item);
+    if (!typeInfo) return null;
+
+    const formatTypeName = (type: string) => {
+      return type.charAt(0).toUpperCase() + type.slice(1);
+    };
+
+    return (
+      <div style={{ color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4 }}>
+        <ColoredIcon iconName={typeInfo.type} color="#94a3b8" size={16} />
+        <span>{formatTypeName(typeInfo.type)}</span>
+      </div>
+    );
+  };
+
   // Render rarity at the bottom
   const renderRarity = () => {
     if (!item.rarity) return null;
@@ -199,6 +216,8 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
         <span style={{ color: rarityColor, fontWeight: 'bold', fontSize: 16 }}>{item.displayName}</span>
       </div>
+      {/* Item type */}
+      {renderItemType()}
       {/* Attack speed */}
       {item.attackSpeed && (
         <div style={{ color: '#aaaaaa', marginBottom: 2 }}>{formatAttackSpeed(item.attackSpeed)} Attack Speed</div>

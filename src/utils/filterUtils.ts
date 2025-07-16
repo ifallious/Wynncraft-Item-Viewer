@@ -28,10 +28,23 @@ export const filterItems = (items: (WynncraftItem & { displayName: string })[], 
       return false;
     }
 
-    // Class requirement filter
-    if (filters.classRequirement.length > 0 && item.requirements.classRequirement && 
-        !filters.classRequirement.includes(item.requirements.classRequirement)) {
-      return false;
+    // Item type filters - exact match for each category
+    if (filters.weaponTypes.length > 0) {
+      if (!item.weaponType || !filters.weaponTypes.includes(item.weaponType)) {
+        return false;
+      }
+    }
+
+    if (filters.armourTypes.length > 0) {
+      if (!item.armourType || !filters.armourTypes.includes(item.armourType)) {
+        return false;
+      }
+    }
+
+    if (filters.accessoryTypes.length > 0) {
+      if (!item.accessoryType || !filters.accessoryTypes.includes(item.accessoryType)) {
+        return false;
+      }
     }
 
     // Skill point filters
@@ -122,14 +135,47 @@ export const getUniqueValues = (items: (WynncraftItem & { displayName: string })
   return Array.from(values).sort();
 };
 
-export const getUniqueClassRequirements = (items: (WynncraftItem & { displayName: string })[]): string[] => {
+export const getUniqueWeaponTypes = (items: (WynncraftItem & { displayName: string })[]): string[] => {
   const values = new Set<string>();
   items.forEach(item => {
-    if (item.requirements.classRequirement) {
-      values.add(item.requirements.classRequirement);
+    if (item.weaponType) {
+      values.add(item.weaponType);
     }
   });
   return Array.from(values).sort();
+};
+
+export const getUniqueArmourTypes = (items: (WynncraftItem & { displayName: string })[]): string[] => {
+  const values = new Set<string>();
+  items.forEach(item => {
+    if (item.armourType) {
+      values.add(item.armourType);
+    }
+  });
+  return Array.from(values).sort();
+};
+
+export const getUniqueAccessoryTypes = (items: (WynncraftItem & { displayName: string })[]): string[] => {
+  const values = new Set<string>();
+  items.forEach(item => {
+    if (item.accessoryType) {
+      values.add(item.accessoryType);
+    }
+  });
+  return Array.from(values).sort();
+};
+
+export const getItemTypeInfo = (item: WynncraftItem): { category: string; type: string } | null => {
+  if (item.weaponType) {
+    return { category: 'weapon', type: item.weaponType };
+  }
+  if (item.armourType) {
+    return { category: 'armour', type: item.armourType };
+  }
+  if (item.accessoryType) {
+    return { category: 'accessory', type: item.accessoryType };
+  }
+  return null;
 };
 
 export const getRarityColor = (rarity: string | undefined): string => {
