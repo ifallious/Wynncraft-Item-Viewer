@@ -22,9 +22,8 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
   onToggle 
 }) => {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    itemType: false,
-    rarity: false,
     itemTypes: false,
+    rarity: false,
     levelRange: false,
     identifications: false,
     attackSpeed: false,
@@ -126,52 +125,30 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </button>
 
           <div className="filter-section">
-            <div className="filter-section-header" onClick={() => toggleSection('itemType')}>
-              <h3>Item Type</h3>
-              <span className="toggle-icon">{expandedSections.itemType ? '▼' : '▶'}</span>
-            </div>
-            {expandedSections.itemType && (
-              <div className="filter-buttons">
-                {types.map(type => (
-                  <button
-                    key={type}
-                    className={`filter-button ${filters.type.includes(type) ? 'active' : ''}`}
-                    onClick={() => handleMultiSelectChange('type', type)}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="filter-section">
-            <div className="filter-section-header" onClick={() => toggleSection('rarity')}>
-              <h3>Rarity</h3>
-              <span className="toggle-icon">{expandedSections.rarity ? '▼' : '▶'}</span>
-            </div>
-            {expandedSections.rarity && (
-              <div className="filter-buttons">
-                {rarities.map(rarity => (
-                  <button
-                    key={rarity}
-                    className={`filter-button ${filters.rarity.includes(rarity) ? 'active' : ''}`}
-                    onClick={() => handleMultiSelectChange('rarity', rarity)}
-                  >
-                    {rarity.charAt(0).toUpperCase() + rarity.slice(1)}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="filter-section">
             <div className="filter-section-header" onClick={() => toggleSection('itemTypes')}>
               <h3>Item Types</h3>
               <span className="toggle-icon">{expandedSections.itemTypes ? '▼' : '▶'}</span>
             </div>
             {expandedSections.itemTypes && (
               <div className="item-type-filters">
+                {/* General Categories */}
+                {types.length > 0 && (
+                  <div className="item-type-category">
+                    <h4>General Categories</h4>
+                    <div className="filter-buttons">
+                      {types.map(type => (
+                        <button
+                          key={type}
+                          className={`filter-button ${filters.type.includes(type) ? 'active' : ''}`}
+                          onClick={() => handleMultiSelectChange('type', type)}
+                        >
+                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Weapons */}
                 {weaponTypes.length > 0 && (
                   <div className="item-type-category">
@@ -243,6 +220,26 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                     </div>
                   </div>
                 )}
+              </div>
+            )}
+          </div>
+
+          <div className="filter-section">
+            <div className="filter-section-header" onClick={() => toggleSection('rarity')}>
+              <h3>Rarity</h3>
+              <span className="toggle-icon">{expandedSections.rarity ? '▼' : '▶'}</span>
+            </div>
+            {expandedSections.rarity && (
+              <div className="filter-buttons">
+                {rarities.map(rarity => (
+                  <button
+                    key={rarity}
+                    className={`filter-button ${filters.rarity.includes(rarity) ? 'active' : ''}`}
+                    onClick={() => handleMultiSelectChange('rarity', rarity)}
+                  >
+                    {rarity.charAt(0).toUpperCase() + rarity.slice(1)}
+                  </button>
+                ))}
               </div>
             )}
           </div>
