@@ -211,8 +211,14 @@ export const formatDamage = (damage: { min: number; raw: number; max: number } |
 export const formatIdentificationName = (key: string): string => {
   // Handle special cases
   const specialCases: Record<string, string> = {
+    'raw1stSpellCost': '1st Spell Cost',
     'raw2ndSpellCost': '2nd Spell Cost',
+    'raw3rdSpellCost': '3rd Spell Cost',
     'raw4thSpellCost': '4th Spell Cost',
+    '1stSpellCost': '1st Spell Cost',
+    '2ndSpellCost': '2nd Spell Cost',
+    '3rdSpellCost': '3rd Spell Cost',
+    '4thSpellCost': '4th Spell Cost',
     'walkSpeed': 'Walk Speed',
     'xpBonus': 'XP Bonus',
     'earthDefence': 'Earth Defence',
@@ -256,6 +262,23 @@ export const formatIdentificationName = (key: string): string => {
     .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
     .replace(/raw/i, '') // Remove "raw" prefix
     .trim();
+};
+
+export const isSpellCostAttribute = (key: string): boolean => {
+  const spellCostKeys = [
+    'spellCost',
+    'rawSpellCost',
+    'raw1stSpellCost',
+    'raw2ndSpellCost',
+    'raw3rdSpellCost',
+    'raw4thSpellCost',
+    '1stSpellCost',
+    '2ndSpellCost',
+    '3rdSpellCost',
+    '4thSpellCost'
+  ];
+
+  return spellCostKeys.some(spellKey => key.toLowerCase().includes(spellKey.toLowerCase()));
 };
 
 export const formatIdentification = (key: string, value: number | { min: number; max: number } | { raw?: number; percent?: number } | null): string => {

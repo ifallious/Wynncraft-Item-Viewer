@@ -1,8 +1,9 @@
 import React from 'react';
 import type { WynncraftItem } from '../types.js';
-import { getRarityColor, formatDamage, formatIdentification, formatIdentificationName, getItemTypeInfo } from '../utils/filterUtils.js';
+import { getRarityColor, formatDamage, formatIdentification, formatIdentificationName, getItemTypeInfo, isSpellCostAttribute } from '../utils/filterUtils.js';
 import './ItemCard.css';
 import ColoredIcon from './ColoredIcon';
+import { Tooltip } from './Tooltip';
 
 interface ItemCardProps {
   item: WynncraftItem & { displayName: string };
@@ -47,8 +48,15 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
     default: '#aaaaaa',
   };
 
-  // Helper for stat color
-  const statColor = (value: number) => (value >= 0 ? colorMap.positive : colorMap.negative);
+  // Helper for stat color - inverted for spell costs (negative is good, positive is bad)
+  const statColor = (value: number, key?: string) => {
+    if (key && isSpellCostAttribute(key)) {
+      // For spell costs: negative values are beneficial (green), positive values are detrimental (red)
+      return value <= 0 ? colorMap.positive : colorMap.negative;
+    }
+    // For all other stats: positive is good (green), negative is bad (red)
+    return value >= 0 ? colorMap.positive : colorMap.negative;
+  };
 
   // Render requirements in Wynncraft style
   const renderRequirements = () => {
@@ -136,7 +144,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       const numericValue = typeof value === 'number' ? value : (value && typeof value.raw === 'number' ? value.raw : 0);
       return (
         <div key={key} style={{ color: '#aaaaaa', display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span><span style={{ color: statColor(numericValue) }}>{numericValue > 0 ? '+' : ''}{displayValue}</span> {formatIdentificationName(key)}</span>
+          <span><span style={{ color: statColor(numericValue, key) }}>{numericValue > 0 ? '+' : ''}{displayValue}</span> {formatIdentificationName(key)}</span>
         </div>
       );
     });
@@ -208,20 +216,20 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
   };
 
   return (
-    <div
-      className="item-card"
-      style={{
-        borderColor: rarityColor,
-        minWidth: 260,
-        maxWidth: 340,
-        fontSize: 13,
-        fontFamily: 'Minecraftia, monospace',
-        '--rarity-color': rarityColor,
-        cursor: onClick ? 'pointer' : 'default'
-      } as React.CSSProperties}
-      onClick={handleClick}
-      title="Click for more information"
-    >
+    <Tooltip content="Click to view details" delay={500} position="top">
+      <div
+        className="item-card"
+        style={{
+          borderColor: rarityColor,
+          minWidth: 260,
+          maxWidth: 340,
+          fontSize: 13,
+          fontFamily: 'Minecraftia, monospace',
+          '--rarity-color': rarityColor,
+          cursor: onClick ? 'pointer' : 'default'
+        } as React.CSSProperties}
+        onClick={handleClick}
+      >
       {/* Name (no percent) */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
         <span style={{ color: rarityColor, fontWeight: 'bold', fontSize: 16 }}>{item.displayName}</span>
@@ -301,6 +309,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       {renderRarity()}
       {/* Lore */}
       {renderLore()}
-    </div>
+      </div>
+    </Tooltip>
   );
 };

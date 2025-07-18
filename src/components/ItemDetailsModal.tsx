@@ -29,11 +29,16 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
-      return () => {
-        document.removeEventListener('keydown', handleEscape);
-        document.body.style.overflow = 'unset';
-      };
+    } else {
+      // Restore scroll when modal is closed
+      document.body.style.overflow = '';
     }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      // Always restore scroll on cleanup
+      document.body.style.overflow = '';
+    };
   }, [isOpen, onClose]);
 
   const formatCoordinates = (coords: number[] | number[][] | null): string => {
@@ -120,8 +125,8 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content item-details-modal" onClick={e => e.stopPropagation()}>
+    <div className="item-details-modal-overlay" onClick={onClose}>
+      <div className="item-details-modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <div className="item-title">
             <h2 style={{ color: rarityColor }}>{item.displayName}</h2>
