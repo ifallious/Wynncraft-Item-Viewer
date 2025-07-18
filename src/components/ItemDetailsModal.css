@@ -1,33 +1,7 @@
 /* Item Details Modal Styles */
-
-/* Modal overlay for proper centering */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
-
-/* Modal content container */
-.modal-content {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow-y: auto;
-}
-
 .item-details-modal {
+  position: fixed;
+  margin: auto;
   max-width: 700px;
   width: 95%;
   max-height: 85vh;
@@ -41,30 +15,6 @@
   margin-bottom: 20px;
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(139, 92, 246, 0.3);
-}
-
-/* Close button styles */
-.close-button {
-  background: none;
-  border: none;
-  color: #94a3b8;
-  font-size: 28px;
-  cursor: pointer;
-  padding: 4px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  line-height: 1;
-}
-
-.close-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  transform: scale(1.1);
 }
 
 .item-title {
@@ -265,45 +215,32 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .modal-overlay {
-    padding: 10px;
-  }
-
-  .modal-content {
-    padding: 20px;
-  }
-
   .item-details-modal {
-    width: 100%;
+    width: 98%;
     max-height: 90vh;
+    margin: 20px auto;
   }
-
+  
   .item-title h2 {
     font-size: 20px;
   }
-
+  
   .summary-row {
     font-size: 13px;
   }
-
+  
   .source-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
   }
-
+  
   .coordinates {
     margin-top: 8px;
   }
-
+  
   .coord-values {
     font-size: 12px;
     word-break: break-all;
-  }
-
-  .close-button {
-    font-size: 24px;
-    width: 32px;
-    height: 32px;
   }
 }
