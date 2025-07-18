@@ -71,6 +71,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
       return (
         <div className="no-drop-info">
           <p>No drop location information available for this item.</p>
+          <p>Most likely obtainable from chests.</p>
         </div>
       );
     }
