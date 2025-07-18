@@ -29,16 +29,11 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
-    } else {
-      // Restore scroll when modal is closed
-      document.body.style.overflow = '';
+      return () => {
+        document.removeEventListener('keydown', handleEscape);
+        document.body.style.overflow = 'unset';
+      };
     }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      // Always restore scroll on cleanup
-      document.body.style.overflow = '';
-    };
   }, [isOpen, onClose]);
 
   const formatCoordinates = (coords: number[] | number[][] | null): string => {

@@ -3,8 +3,6 @@ import type { WynncraftItem } from '../types.js';
 import { getRarityColor, formatDamage, formatIdentification, formatIdentificationName, getItemTypeInfo, isSpellCostAttribute } from '../utils/filterUtils.js';
 import './ItemCard.css';
 import ColoredIcon from './ColoredIcon';
-import { Tooltip } from './Tooltip';
-
 interface ItemCardProps {
   item: WynncraftItem & { displayName: string };
   onClick?: (item: WynncraftItem & { displayName: string }) => void;
@@ -216,8 +214,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
   };
 
   return (
-    <Tooltip content="Click to view details" delay={500} position="top">
-      <div
+    <div
         className="item-card"
         style={{
           borderColor: rarityColor,
@@ -229,7 +226,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
           cursor: onClick ? 'pointer' : 'default'
         } as React.CSSProperties}
         onClick={handleClick}
-      >
+    >
       {/* Name (no percent) */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
         <span style={{ color: rarityColor, fontWeight: 'bold', fontSize: 16 }}>{item.displayName}</span>
@@ -309,7 +306,6 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       {renderRarity()}
       {/* Lore */}
       {renderLore()}
-      </div>
-    </Tooltip>
+    </div>
   );
 };
