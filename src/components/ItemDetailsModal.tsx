@@ -52,9 +52,6 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
       // Reset positioning state when modal opens
       setIsPositioned(false);
 
-      // Small delay to ensure smooth animation
-      const timer = setTimeout(calculatePosition, 1);
-
       // Recalculate position if window is resized while modal is open
       window.addEventListener('resize', calculatePosition);
       window.addEventListener('scroll', calculatePosition);
