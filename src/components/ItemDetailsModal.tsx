@@ -26,8 +26,9 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
         // Modal dimensions (approximate)
-        const modalWidth = Math.min(700, viewportWidth * 0.95); // max-width: 700px, width: 95%
-        const modalHeight = Math.min(viewportHeight * 0.85, 600); // Estimated max height
+        const isMobile = viewportWidth <= 768;
+        const modalWidth = isMobile ? viewportWidth * 0.98 : Math.min(700, viewportWidth * 0.95);
+        const modalHeight = Math.min(viewportHeight * (isMobile ? 0.9 : 0.85), 600);
 
         // Calculate centered position within viewport
         const centerX = viewportWidth / 2;
@@ -38,7 +39,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         let top = scrollTop + centerY - (modalHeight / 2);
 
         // Ensure modal doesn't go off-screen
-        const padding = 20; // Minimum padding from screen edges
+        const padding = isMobile ? 10 : 20; // Smaller padding on mobile
         left = Math.max(scrollLeft + padding, Math.min(left, scrollLeft + viewportWidth - modalWidth - padding));
         top = Math.max(scrollTop + padding, Math.min(top, scrollTop + viewportHeight - modalHeight - padding));
 

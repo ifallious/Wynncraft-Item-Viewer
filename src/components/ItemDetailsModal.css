@@ -26,6 +26,8 @@
   backdrop-filter: blur(12px);
   z-index: 1001; /* Ensure it's above the overlay */
   overflow-y: auto; /* Allow scrolling if content is too tall */
+  transition: opacity 0.2s ease-in-out; /* Smooth appearance */
+  opacity: 1;
 }
 
 .item-details-modal .modal-header {
@@ -259,7 +261,7 @@
   .item-details-modal {
     width: 98%;
     max-height: 90vh;
-    margin: 20px auto;
+    /* Remove margin since we're using absolute positioning */
   }
   
   .item-title h2 {
