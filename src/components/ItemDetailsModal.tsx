@@ -57,7 +57,6 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
       window.addEventListener('scroll', calculatePosition);
 
       return () => {
-        clearTimeout(timer);
         window.removeEventListener('resize', calculatePosition);
         window.removeEventListener('scroll', calculatePosition);
       };
