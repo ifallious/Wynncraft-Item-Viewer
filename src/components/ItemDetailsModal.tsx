@@ -97,7 +97,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
           </div>
         )}
 
-        {hasDropMeta && (
+        {hasDropMeta && item.dropMeta && (
           <div className="drop-meta-section">
             <h3 className="section-title">Drop Source</h3>
             <div className="drop-sources">
