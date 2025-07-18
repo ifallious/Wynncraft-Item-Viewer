@@ -18,28 +18,23 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 }) => {
   const [modalPosition, setModalPosition] = useState({ top: 0});
   const [isPositioned, setIsPositioned] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
 
   // Calculate modal position based on actual content and viewport
   useEffect(() => {
-    if (isOpen && modalRef.current) {
+    if (isOpen) {
       const calculatePosition = () => {
         const viewportHeight = window.innerHeight;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
         // Get actual modal dimensions
-        const modalElement = modalRef.current;
-        if (!modalElement) return;
-
-        // Force a layout to get accurate measurements
-        void modalElement.offsetHeight;
+        const modalHeight = viewportHeight * 0.8;
 
         // Center within the main content area (relative to the viewport)
         // The main content starts at sidebarOffset and has width mainContentWidth
         const centerY = viewportHeight / 2;
 
         // Position modal in center of main content area, accounting for scroll
-        const top = scrollTop + centerY - (modalElement.height / 2);
+        const top = scrollTop + centerY - (modalHeight / 2);
 
         setModalPosition({top});
         setIsPositioned(true);
@@ -178,7 +173,6 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div
-        ref={modalRef}
         className={`modal-content item-details-modal ${isPositioned ? 'positioned' : 'positioning'}`}
         onClick={e => e.stopPropagation()}
         style={{
