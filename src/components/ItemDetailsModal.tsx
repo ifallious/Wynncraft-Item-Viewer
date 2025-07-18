@@ -45,7 +45,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
         top = Math.max(minTop, Math.min(top, maxTop));
 
-        setModalPosition({ top, left });
+        setModalPosition({ top});
         setIsPositioned(true);
       };
 
@@ -186,7 +186,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         style={{
           position: 'absolute',
           top: modalPosition.top,
-          left: modalPosition.left,
+          left: "25%",
           transform: 'none' // Override any CSS transform
         }}
       >
