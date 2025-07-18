@@ -333,9 +333,7 @@ export const checkIdentificationFilter = (item: WynncraftItem, filter: Identific
   if (typeof identification === 'number') {
     value = identification;
   } else if (typeof identification === 'object' && identification !== null) {
-    if ('raw' in identification) {
-      value = identification.raw;
-    } else if ('min' in identification && 'max' in identification) {
+    if ('min' in identification && 'max' in identification) {
       // For range values, use the max value
       value = identification.max;
     } else {
