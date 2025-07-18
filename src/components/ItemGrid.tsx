@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import type { WynncraftItem } from '../types.js';
 import { ItemCard } from './ItemCard.js';
+import { ItemDetailsModal } from './ItemDetailsModal.js';
 import './ItemGrid.css';
 
 interface ItemGridProps {
@@ -14,6 +15,8 @@ export const ItemGrid: React.FC<ItemGridProps> = ({ items }) => {
   const [sortBy, setSortBy] = useState<SortOption>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [visibleItems, setVisibleItems] = useState<number>(24);
+  const [selectedItem, setSelectedItem] = useState<(WynncraftItem & { displayName: string }) | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const sortedItems = useMemo(() => {
@@ -73,6 +76,16 @@ export const ItemGrid: React.FC<ItemGridProps> = ({ items }) => {
     setVisibleItems(prev => prev + 24);
   }, []);
 
+  const handleItemClick = (item: WynncraftItem & { displayName: string }) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedItem(null);
+  };
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -127,7 +140,11 @@ export const ItemGrid: React.FC<ItemGridProps> = ({ items }) => {
 
       <div className="item-grid">
         {displayedItems.map((item, index) => (
-          <ItemCard key={`${item.internalName}-${index}`} item={item} />
+          <ItemCard
+            key={`${item.internalName}-${index}`}
+            item={item}
+            onClick={handleItemClick}
+          />
         ))}
       </div>
 
@@ -140,6 +157,12 @@ export const ItemGrid: React.FC<ItemGridProps> = ({ items }) => {
       <div className="page-info">
         Showing {displayedItems.length} of {items.length} items
       </div>
+
+      <ItemDetailsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        item={selectedItem}
+      />
     </div>
   );
 };

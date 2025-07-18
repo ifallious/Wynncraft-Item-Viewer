@@ -21,6 +21,10 @@ interface WynncraftItem {
   majorIds?: Record<string, string>;
   powderSlots?: number;
   lore?: string;
+  droppedBy?: Array<{
+    name: string;
+    coords: number[] | number[][] | null;
+  }>;
   dropMeta?: {
     name: string;
     type: string;

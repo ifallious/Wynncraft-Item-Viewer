@@ -6,6 +6,7 @@ import ColoredIcon from './ColoredIcon';
 
 interface ItemCardProps {
   item: WynncraftItem & { displayName: string };
+  onClick?: (item: WynncraftItem & { displayName: string }) => void;
 }
 
 interface IdentificationValue {
@@ -13,7 +14,7 @@ interface IdentificationValue {
   percent?: number;
 }
 
-export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
+export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
   const rarityColor = getRarityColor(item.rarity);
 
   const formatAttackSpeed = (speed: string) => {
@@ -200,21 +201,42 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
     );
   };
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick(item);
+    }
+  };
+
   return (
-    <div 
-      className="item-card" 
-      style={{ 
-        borderColor: rarityColor, 
-        minWidth: 260, 
-        maxWidth: 340, 
-        fontSize: 13, 
+    <div
+      className="item-card"
+      style={{
+        borderColor: rarityColor,
+        minWidth: 260,
+        maxWidth: 340,
+        fontSize: 13,
         fontFamily: 'Minecraftia, monospace',
-        '--rarity-color': rarityColor
+        '--rarity-color': rarityColor,
+        cursor: onClick ? 'pointer' : 'default'
       } as React.CSSProperties}
+      onClick={handleClick}
     >
       {/* Name (no percent) */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
         <span style={{ color: rarityColor, fontWeight: 'bold', fontSize: 16 }}>{item.displayName}</span>
+        {(item.droppedBy || item.dropMeta) && (
+          <span style={{
+            color: '#8b5cf6',
+            fontSize: 12,
+            fontWeight: 'bold',
+            background: 'rgba(139, 92, 246, 0.2)',
+            padding: '2px 6px',
+            borderRadius: '4px',
+            border: '1px solid rgba(139, 92, 246, 0.3)'
+          }}>
+            📍
+          </span>
+        )}
       </div>
       {/* Item type */}
       {renderItemType()}

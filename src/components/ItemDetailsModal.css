@@ -1,0 +1,244 @@
+/* Item Details Modal Styles */
+.item-details-modal {
+  max-width: 700px;
+  width: 95%;
+  max-height: 85vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.item-details-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.item-title {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.item-title h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  text-shadow: 0 0 10px currentColor;
+  letter-spacing: -0.01em;
+}
+
+.item-type-badge {
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  color: #c084fc;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.item-summary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.summary-row .label {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.summary-row .value {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.main-section-title {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.drop-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-title {
+  color: #c084fc;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 16px;
+  background: linear-gradient(135deg, #8b5cf6, #c084fc);
+  border-radius: 2px;
+}
+
+.drop-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.drop-source {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.drop-source:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(139, 92, 246, 0.3);
+  transform: translateY(-1px);
+}
+
+.source-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.source-name {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.source-type {
+  background: rgba(100, 116, 139, 0.3);
+  color: #94a3b8;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.source-type.mob {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+.source-type.raid {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+
+.source-type.quest {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+}
+
+.source-type.dungeon {
+  background: rgba(251, 146, 60, 0.2);
+  color: #fdba74;
+}
+
+.source-type.merchant {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+}
+
+.coordinates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.coord-label {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.coord-values {
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.no-drop-info {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+}
+
+.no-drop-info p {
+  margin: 0;
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .item-details-modal {
+    width: 98%;
+    max-height: 90vh;
+    margin: 20px auto;
+  }
+  
+  .item-title h2 {
+    font-size: 20px;
+  }
+  
+  .summary-row {
+    font-size: 13px;
+  }
+  
+  .source-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .coordinates {
+    margin-top: 8px;
+  }
+  
+  .coord-values {
+    font-size: 12px;
+    word-break: break-all;
+  }
+}
