@@ -25,7 +25,6 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
     if (isOpen && modalRef.current) {
       const calculatePosition = () => {
         const viewportHeight = window.innerHeight;
-        const viewportWidth = window.innerWidth;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
         // Get actual modal dimensions
@@ -37,9 +36,6 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
         const modalRect = modalElement.getBoundingClientRect();
         const modalHeight = modalRect.height;
-
-        // Calculate positions
-        const isMobile = viewportWidth <= 768;
 
         // Center within the main content area (relative to the viewport)
         // The main content starts at sidebarOffset and has width mainContentWidth
