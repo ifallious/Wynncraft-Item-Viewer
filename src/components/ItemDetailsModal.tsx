@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { WynncraftItem } from '../types.js';
 import { getRarityColor } from '../utils/filterUtils.js';
 import './ItemDetailsModal.css';
