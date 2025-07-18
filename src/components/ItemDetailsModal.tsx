@@ -51,6 +51,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
       // Reset positioning state when modal opens
       setIsPositioned(false);
+      calculatePosition();
 
       // Recalculate position if window is resized while modal is open
       window.addEventListener('resize', calculatePosition);
