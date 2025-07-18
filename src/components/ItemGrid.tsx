@@ -163,6 +163,7 @@ export const ItemGrid: React.FC<ItemGridProps> = ({ items, sidebarOpen = true })
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         item={selectedItem}
+        sidebarOpen={sidebarOpen}
       />
     </div>
   );

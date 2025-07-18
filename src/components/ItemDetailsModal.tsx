@@ -7,35 +7,62 @@ interface ItemDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   item: (WynncraftItem & { displayName: string }) | null;
+  sidebarOpen?: boolean; // Add sidebar state to calculate proper centering
 }
 
 export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
   isOpen,
   onClose,
-  item
+  item,
+  sidebarOpen = true
 }) => {
+  const [modalPosition, setModalPosition] = useState({ top: 0});
   const [isPositioned, setIsPositioned] = useState(false);
 
-  // Handle modal positioning and body scroll lock
+  // Calculate modal position based on viewport and scroll position
   useEffect(() => {
     if (isOpen) {
+      const calculatePosition = () => {
+        const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Modal dimensions (approximate)
+        const isMobile = viewportWidth <= 768;
+        const modalHeight = Math.min(viewportHeight * (isMobile ? 0.9 : 0.85), 600);
+
+        // Center within the main content area (relative to the viewport)
+        // The main content starts at sidebarOffset and has width mainContentWidth
+        const centerY = viewportHeight / 2;
+
+        // Position modal in center of main content area, accounting for scroll
+        let top = scrollTop + centerY - (modalHeight / 2);
+
+        // Ensure modal doesn't go off-screen within the main content area
+        const padding = isMobile ? 10 : 20;
+        const minTop = scrollTop + padding;
+        const maxTop = scrollTop + viewportHeight - modalHeight - padding;
+
+        top = Math.min(minTop, Math.min(top, maxTop));
+
+        setModalPosition({ top});
+        setIsPositioned(true);
+      };
+
       // Reset positioning state when modal opens
       setIsPositioned(false);
+      calculatePosition();
 
-      // Use a small delay to ensure smooth animation
-      const timer = setTimeout(() => {
-        setIsPositioned(true);
-      }, 50);
-
-      // Prevent body scroll when modal is open
-      document.body.style.overflow = 'hidden';
+      // Recalculate position if window is resized while modal is open
+      window.addEventListener('resize', calculatePosition);
+      window.addEventListener('scroll', calculatePosition);
 
       return () => {
-        clearTimeout(timer);
-        document.body.style.overflow = 'unset';
+        window.removeEventListener('resize', calculatePosition);
+        window.removeEventListener('scroll', calculatePosition);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, sidebarOpen]);
 
   // Handle escape key to close modal and prevent main-content scroll
   useEffect(() => {
@@ -149,10 +176,16 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
   };
 
   return (
-    <div className="item-details-modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={onClose}>
       <div
-        className={`item-details-modal ${isPositioned ? 'positioned' : 'positioning'}`}
+        className={`modal-content item-details-modal ${isPositioned ? 'positioned' : 'positioning'}`}
         onClick={e => e.stopPropagation()}
+        style={{
+          position: 'absolute',
+          top: modalPosition.top,
+          left: "25%",
+          transform: 'none' // Override any CSS transform
+        }}
       >
         <div className="modal-header">
           <div className="item-title">

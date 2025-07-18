@@ -8,10 +8,7 @@
   background-color: rgba(0, 0, 0, 0);
   backdrop-filter: blur(12px);
   z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  /* Remove flexbox centering for custom positioning */
   animation: fadeInOverlay 0.3s ease-out forwards;
 }
 
@@ -26,21 +23,20 @@
 
 /* Item Details Modal Styles */
 .item-details-modal {
-  position: relative;
+  position: absolute; /* Changed from fixed to absolute for custom positioning */
   max-width: 700px;
-  width: 100%;
-  max-height: calc(100vh - 40px); /* Account for overlay padding */
+  width: 95%;
+  max-height: 85vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
   border-radius: 8px;
-  padding: 0;
+  padding: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(139, 92, 246, 0.3);
   backdrop-filter: blur(12px);
-  z-index: 1001;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1001; /* Ensure it's above the overlay */
+  overflow-y: auto; /* Allow scrolling if content is too tall */
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth positioning and appearance */
 }
 
 /* Modal positioning states for smooth transitions */
@@ -80,15 +76,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 24px 24px 12px 24px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
   border-bottom: 1px solid rgba(139, 92, 246, 0.3);
-  flex-shrink: 0; /* Prevent header from shrinking */
-}
-
-.item-details-modal .modal-body {
-  padding: 20px 24px 24px 24px;
-  overflow-y: auto; /* Allow scrolling for modal body content */
-  flex: 1; /* Take remaining space */
 }
 
 .item-title {
@@ -310,42 +300,40 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .item-details-modal-overlay {
-    padding: 10px;
-    animation-duration: 0.2s;
+  .item-details-modal {
+    width: 98%;
+    max-height: 90vh;
+    /* Remove margin since we're using absolute positioning */
   }
 
+  /* Faster animations on mobile for better performance */
   .item-details-modal {
-    max-height: calc(100vh - 20px);
     transition: all 0.2s ease-out;
   }
 
-  .item-details-modal .modal-header {
-    padding: 16px 16px 12px 16px;
+  .item-details-modal-overlay {
+    animation-duration: 0.2s;
   }
-
-  .item-details-modal .modal-body {
-    padding: 16px;
-  }
-
+}
+  
   .item-title h2 {
     font-size: 20px;
   }
-
+  
   .summary-row {
     font-size: 13px;
   }
-
+  
   .source-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
   }
-
+  
   .coordinates {
     margin-top: 8px;
   }
-
+  
   .coord-values {
     font-size: 12px;
     word-break: break-all;
