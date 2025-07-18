@@ -46,17 +46,8 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         const centerY = viewportHeight / 2;
 
         // Position modal in center of main content area, accounting for scroll
-        let top = scrollTop + centerY - (modalHeight / 2);
-        // Ensure modal doesn't go off-screen within the main content area
-        const padding = isMobile ? 10 : 20;
-        const minTop = scrollTop + padding;
-        const maxTop = scrollTop + viewportHeight - modalHeight - padding;
+        const top = scrollTop + centerY - (modalHeight / 2);
 
-        if (top < minTop) {
-          top = minTop;
-        } else if (top > maxTop) {
-          top = maxTop;
-        }
         setModalPosition({top});
         setIsPositioned(true);
       };
