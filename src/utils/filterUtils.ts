@@ -313,8 +313,8 @@ export const checkIdentificationFilter = (item: WynncraftItem, filter: Identific
     if ('raw' in identification) {
       value = identification.raw;
     } else if ('min' in identification && 'max' in identification) {
-      // For range values, use the average
-      value = (identification.min + identification.max) / 2;
+      // For range values, use the max value
+      value = identification.max;
     } else {
       return false;
     }
