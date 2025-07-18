@@ -37,6 +37,7 @@
   z-index: 1001; /* Ensure it's above the overlay */
   overflow-y: auto; /* Allow scrolling if content is too tall */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth positioning and appearance */
+  left: 25%;
 }
 
 /* Modal positioning states for smooth transitions */

@@ -16,7 +16,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
   item,
   sidebarOpen = true
 }) => {
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const [modalPosition, setModalPosition] = useState({ top: 0});
   const [isPositioned, setIsPositioned] = useState(false);
 
   // Calculate modal position based on viewport and scroll position
@@ -26,40 +26,23 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         const viewportHeight = window.innerHeight;
         const viewportWidth = window.innerWidth;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
         // Modal dimensions (approximate)
         const isMobile = viewportWidth <= 768;
-        const modalWidth = isMobile ? viewportWidth * 0.98 : Math.min(700, viewportWidth * 0.95);
         const modalHeight = Math.min(viewportHeight * (isMobile ? 0.9 : 0.85), 600);
-
-        // Calculate sidebar offset for proper centering within main content
-        let sidebarOffset = 0;
-        if (!isMobile) {
-          // On desktop, account for sidebar width
-          sidebarOffset = sidebarOpen ? 320 : 50;
-        }
-
-        // Calculate the main content area dimensions
-        const mainContentWidth = viewportWidth - sidebarOffset;
 
         // Center within the main content area (relative to the viewport)
         // The main content starts at sidebarOffset and has width mainContentWidth
-        const centerX = (mainContentWidth / 2) - sidebarOffset;
         const centerY = viewportHeight / 2;
 
         // Position modal in center of main content area, accounting for scroll
-        let left = scrollLeft + centerX - (modalWidth / 2);
         let top = scrollTop + centerY - (modalHeight / 2);
 
         // Ensure modal doesn't go off-screen within the main content area
         const padding = isMobile ? 10 : 20;
-        const minLeft = scrollLeft + padding - sidebarOffset;
-        const maxLeft = scrollLeft + viewportWidth - modalWidth - padding;
         const minTop = scrollTop + padding;
         const maxTop = scrollTop + viewportHeight - modalHeight - padding;
 
-        left = Math.max(minLeft, Math.min(left, maxLeft));
         top = Math.max(minTop, Math.min(top, maxTop));
 
         setModalPosition({ top, left });
