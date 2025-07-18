@@ -5,10 +5,20 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0);
   backdrop-filter: blur(12px);
   z-index: 1000;
   /* Remove flexbox centering for custom positioning */
+  animation: fadeInOverlay 0.3s ease-out forwards;
+}
+
+@keyframes fadeInOverlay {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 }
 
 /* Item Details Modal Styles */
@@ -26,8 +36,40 @@
   backdrop-filter: blur(12px);
   z-index: 1001; /* Ensure it's above the overlay */
   overflow-y: auto; /* Allow scrolling if content is too tall */
-  transition: opacity 0.2s ease-in-out; /* Smooth appearance */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth positioning and appearance */
+}
+
+/* Modal positioning states for smooth transitions */
+.item-details-modal.positioning {
+  opacity: 0;
+  transform: scale(0.95) translateY(-20px);
+  pointer-events: none; /* Prevent interaction during positioning */
+}
+
+.item-details-modal.positioned {
   opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto; /* Re-enable interaction when positioned */
+}
+
+/* Additional smooth entrance animation */
+@keyframes modalEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(-30px);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.item-details-modal.positioned {
+  animation: modalEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .item-details-modal .modal-header {
@@ -263,6 +305,16 @@
     max-height: 90vh;
     /* Remove margin since we're using absolute positioning */
   }
+
+  /* Faster animations on mobile for better performance */
+  .item-details-modal {
+    transition: all 0.2s ease-out;
+  }
+
+  .item-details-modal-overlay {
+    animation-duration: 0.2s;
+  }
+}
   
   .item-title h2 {
     font-size: 20px;
