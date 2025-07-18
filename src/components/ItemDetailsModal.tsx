@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import type { WynncraftItem } from '../types.js';
 import { getRarityColor } from '../utils/filterUtils.js';
 import './ItemDetailsModal.css';
@@ -18,16 +18,24 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 }) => {
   const [modalPosition, setModalPosition] = useState({ top: 0});
   const [isPositioned, setIsPositioned] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Calculate modal position based on actual content and viewport
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && modalRef.current) {
       const calculatePosition = () => {
         const viewportHeight = window.innerHeight;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
         // Get actual modal dimensions
-        const modalHeight = viewportHeight * 0.8;
+        const modalElement = modalRef.current;
+        if (!modalElement) return;
+
+        // Force a layout to get accurate measurements
+        void modalElement.offsetHeight;
+
+        const modalRect = modalElement.getBoundingClientRect();
+        const modalHeight = modalRect.height;
 
         // Center within the main content area (relative to the viewport)
         // The main content starts at sidebarOffset and has width mainContentWidth
@@ -35,8 +43,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
         // Position modal in center of main content area, accounting for scroll
         const top = scrollTop + centerY - (modalHeight / 2);
-        console.log("ScrollTop "+ scrollTop + "CenterY "+ centerY + "ModalHeight "+ modalHeight + "Top "+ top + "ViewportHeight "+ viewportHeight);
-
+       
         setModalPosition({top});
         setIsPositioned(true);
       };
@@ -174,6 +181,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div
+        ref={modalRef}
         className={`modal-content item-details-modal ${isPositioned ? 'positioned' : 'positioning'}`}
         onClick={e => e.stopPropagation()}
         style={{

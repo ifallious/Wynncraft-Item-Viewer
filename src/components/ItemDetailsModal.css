@@ -25,8 +25,9 @@
 .item-details-modal {
   position: absolute; /* Changed from fixed to absolute for custom positioning */
   max-width: 700px;
+  margin: 0;
   width: 95%;
-  height: 80vh;
+  max-height: 80vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
   border-radius: 8px;
