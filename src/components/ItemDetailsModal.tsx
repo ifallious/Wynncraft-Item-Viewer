@@ -125,8 +125,8 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
   };
 
   return (
-    <div className="item-details-modal-overlay" onClick={onClose}>
-      <div className="item-details-modal" onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content item-details-modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <div className="item-title">
             <h2 style={{ color: rarityColor }}>{item.displayName}</h2>
