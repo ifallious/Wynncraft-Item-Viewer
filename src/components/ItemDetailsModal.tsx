@@ -32,28 +32,14 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         const modalElement = modalRef.current;
         if (!modalElement) return;
 
-        // Temporarily make modal visible to measure its dimensions
-        const originalVisibility = modalElement.style.visibility;
-        const originalPosition = modalElement.style.position;
-        modalElement.style.visibility = 'hidden';
-        modalElement.style.position = 'absolute';
-        modalElement.style.top = '0';
-        modalElement.style.left = '0';
-
         // Force a layout to get accurate measurements
         void modalElement.offsetHeight;
 
         const modalRect = modalElement.getBoundingClientRect();
         const modalHeight = modalRect.height;
-        const modalWidth = modalRect.width;
-
-        // Calculate sidebar offset
-        const sidebarWidth = sidebarOpen ? 280 : 0;
-        const availableWidth = viewportWidth - sidebarWidth;
 
         // Calculate positions
         const isMobile = viewportWidth <= 768;
-        const modalHeight = Math.min(viewportHeight * (isMobile ? 0.9 : 0.85), 600);
 
         // Center within the main content area (relative to the viewport)
         // The main content starts at sidebarOffset and has width mainContentWidth
@@ -71,22 +57,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         } else if (top > maxTop) {
           top = maxTop;
         }
-
-        // Ensure modal stays within horizontal bounds
-        const minLeft = padding;
-        const maxLeft = viewportWidth - modalWidth - padding;
-
-        if (left < minLeft) {
-          left = minLeft;
-        } else if (left > maxLeft) {
-          left = maxLeft;
-        }
-
-        // Restore original styles
-        modalElement.style.visibility = originalVisibility;
-        modalElement.style.position = originalPosition;
-
-        setModalPosition({ top, left });
+        setModalPosition({top});
         setIsPositioned(true);
       };
 
@@ -95,7 +66,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
       // Use requestAnimationFrame to ensure DOM is ready
       requestAnimationFrame(() => {
-      calculatePosition();
+        calculatePosition();
       });
 
       // Recalculate position if window is resized or scrolled
