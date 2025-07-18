@@ -14,8 +14,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   delay = 500,
   position = 'top' 
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isVisible, setIsVisible] = useState(false);
+  const [, setIsVisible] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
