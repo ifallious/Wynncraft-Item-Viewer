@@ -42,10 +42,10 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
         // Calculate the main content area dimensions
         const mainContentWidth = viewportWidth - sidebarOffset;
-        const mainContentLeft = sidebarOffset;
 
-        // Center within the main content area
-        const centerX = mainContentLeft + (mainContentWidth / 2);
+        // Center within the main content area (relative to the viewport)
+        // The main content starts at sidebarOffset and has width mainContentWidth
+        const centerX = sidebarOffset + (mainContentWidth / 2);
         const centerY = viewportHeight / 2;
 
         // Position modal in center of main content area, accounting for scroll
@@ -54,7 +54,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
         // Ensure modal doesn't go off-screen within the main content area
         const padding = isMobile ? 10 : 20;
-        const minLeft = scrollLeft + mainContentLeft + padding;
+        const minLeft = scrollLeft + sidebarOffset + padding;
         const maxLeft = scrollLeft + viewportWidth - modalWidth - padding;
         const minTop = scrollTop + padding;
         const maxTop = scrollTop + viewportHeight - modalHeight - padding;
