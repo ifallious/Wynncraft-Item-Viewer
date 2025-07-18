@@ -18,7 +18,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
   const rarityColor = getRarityColor(item.rarity);
 
-  // Handle escape key to close modal and prevent body scroll
+  // Handle escape key to close modal and prevent main-content scroll
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -28,10 +28,16 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
+      const mainContent = document.querySelector('.main-content') as HTMLElement;
+      if (mainContent) {
+        mainContent.style.overflow = 'hidden';
+      }
       return () => {
         document.removeEventListener('keydown', handleEscape);
-        document.body.style.overflow = 'unset';
+        const mainContent = document.querySelector('.main-content') as HTMLElement;
+        if (mainContent) {
+          mainContent.style.overflow = 'unset';
+        }
       };
     }
   }, [isOpen, onClose]);
