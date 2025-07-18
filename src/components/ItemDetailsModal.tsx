@@ -18,7 +18,16 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 }) => {
   const [modalPosition, setModalPosition] = useState({ top: 0});
   const [isPositioned, setIsPositioned] = useState(false);
+  const [expandedCoordinates, setExpandedCoordinates] = useState<Record<string, boolean>>({});
   const modalRef = useRef<HTMLDivElement>(null);
+
+  // Toggle coordinate expansion for a specific mob/source
+  const toggleCoordinateExpansion = (sourceKey: string) => {
+    setExpandedCoordinates(prev => ({
+      ...prev,
+      [sourceKey]: !prev[sourceKey]
+    }));
+  };
 
   // Calculate modal position based on actual content and viewport
   useEffect(() => {
@@ -95,30 +104,71 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
   const rarityColor = getRarityColor(item.rarity);
 
-  const formatCoordinates = (coords: number[] | number[][] | null): string => {
+  const formatSingleCoordinate = (coord: number[]): string => {
+    if (coord.length >= 4) {
+      return `X: ${coord[0]}, Y: ${coord[1]}, Z: ${coord[2]} (Radius: ${coord[3]})`;
+    } else {
+      return `X: ${coord[0]}, Y: ${coord[1]}, Z: ${coord[2]}`;
+    }
+  };
+
+  const renderCoordinates = (coords: number[] | number[][] | null, sourceKey: string): JSX.Element => {
     if (!coords) {
-      return 'Unknown location';
+      return (
+        <div className="coordinates">
+          <span className="coord-label">Location:</span>
+          <span className="coord-values">Unknown location</span>
+        </div>
+      );
     }
 
     if (Array.isArray(coords[0])) {
       // Multiple coordinate arrays
-      return (coords as number[][])
-        .map(coord => {
-          if (coord.length >= 4) {
-            return `X: ${coord[0]}, Y: ${coord[1]}, Z: ${coord[2]} (Radius: ${coord[3]})`;
-          } else {
-            return `X: ${coord[0]}, Y: ${coord[1]}, Z: ${coord[2]}`;
-          }
-        })
-        .join(' • ');
+      const coordArrays = coords as number[][];
+      const isExpanded = expandedCoordinates[sourceKey];
+      const hasMultipleCoords = coordArrays.length > 1;
+
+      return (
+        <div className="coordinates">
+          <div className="coord-header">
+            <span className="coord-label">Location:</span>
+            {hasMultipleCoords && (
+              <button
+                className="coord-toggle-button"
+                onClick={() => toggleCoordinateExpansion(sourceKey)}
+                aria-label={isExpanded ? 'Show less coordinates' : 'Show more coordinates'}
+              >
+                <span className="coord-toggle-icon">
+                  {isExpanded ? '▼' : '▶'}
+                </span>
+                <span className="coord-toggle-text">
+                  {isExpanded ? 'Show less' : `Show all (${coordArrays.length})`}
+                </span>
+              </button>
+            )}
+          </div>
+          <div className="coord-values-container">
+            {hasMultipleCoords && !isExpanded ? (
+              <span className="coord-values">{formatSingleCoordinate(coordArrays[0])}</span>
+            ) : (
+              coordArrays.map((coord, index) => (
+                <span key={index} className="coord-values">
+                  {formatSingleCoordinate(coord)}
+                </span>
+              ))
+            )}
+          </div>
+        </div>
+      );
     } else {
       // Single coordinate array
       const coord = coords as number[];
-      if (coord.length >= 4) {
-        return `X: ${coord[0]}, Y: ${coord[1]}, Z: ${coord[2]} (Radius: ${coord[3]})`;
-      } else {
-        return `X: ${coord[0]}, Y: ${coord[1]}, Z: ${coord[2]}`;
-      }
+      return (
+        <div className="coordinates">
+          <span className="coord-label">Location:</span>
+          <span className="coord-values">{formatSingleCoordinate(coord)}</span>
+        </div>
+      );
     }
   };
 
@@ -147,10 +197,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
                     <span className="source-name">{mob.name}</span>
                     <span className="source-type mob">Mob</span>
                   </div>
-                  <div className="coordinates">
-                    <span className="coord-label">Location:</span>
-                    <span className="coord-values">{formatCoordinates(mob.coords)}</span>
-                  </div>
+                  {renderCoordinates(mob.coords, `mob-${index}-${mob.name}`)}
                 </div>
               ))}
             </div>
@@ -166,10 +213,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
                   <span className="source-name">{item.dropMeta.name}</span>
                   <span className={`source-type ${item.dropMeta.type.toLowerCase()}`}>{item.dropMeta.type}</span>
                 </div>
-                <div className="coordinates">
-                  <span className="coord-label">Location:</span>
-                  <span className="coord-values">{formatCoordinates(item.dropMeta.coordinates)}</span>
-                </div>
+                {renderCoordinates(item.dropMeta.coordinates, `dropMeta-${item.dropMeta.name}`)}
               </div>
             </div>
           </div>

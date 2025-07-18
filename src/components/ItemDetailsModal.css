@@ -222,6 +222,7 @@
   color: #ffffff;
   font-weight: 600;
   font-size: 15px;
+  letter-spacing: 0.5px;
 }
 
 .source-type {
@@ -266,6 +267,13 @@
   gap: 4px;
 }
 
+.coord-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
 .coord-label {
   color: #64748b;
   font-size: 12px;
@@ -274,17 +282,56 @@
   letter-spacing: 0.5px;
 }
 
+.coord-toggle-button {
+  background: none;
+  border: none;
+  color: #8b5cf6;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.coord-toggle-button:hover {
+  background: rgba(139, 92, 246, 0.1);
+  color: #c084fc;
+}
+
+.coord-toggle-icon {
+  font-size: 10px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.coord-toggle-text {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.coord-values-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .coord-values {
-  color: #e2e8f0;
+  color: #64748b;
   font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 13px;
   font-weight: 500;
-  background: rgba(0, 0, 0, 0.2);
+  background: #ffffff08;
   padding: 6px 10px;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   word-break: break-all;
   line-height: 1.4;
+  letter-spacing: 0.5px;
 }
 
 .no-drop-info {
@@ -315,28 +362,36 @@
   .item-details-modal-overlay {
     animation-duration: 0.2s;
   }
-}
-  
+
   .item-title h2 {
     font-size: 20px;
   }
-  
+
   .summary-row {
     font-size: 13px;
   }
-  
+
   .source-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
   }
-  
+
   .coordinates {
     margin-top: 8px;
   }
-  
+
   .coord-values {
     font-size: 12px;
     word-break: break-all;
+  }
+
+  .coord-toggle-button {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+
+  .coord-toggle-text {
+    font-size: 10px;
   }
 }
