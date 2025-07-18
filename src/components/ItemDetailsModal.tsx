@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import type { WynncraftItem } from '../types.js';
 import { getRarityColor } from '../utils/filterUtils.js';
 import './ItemDetailsModal.css';
@@ -18,16 +18,40 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 }) => {
   const [modalPosition, setModalPosition] = useState({ top: 0});
   const [isPositioned, setIsPositioned] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
-  // Calculate modal position based on viewport and scroll position
+  // Calculate modal position based on actual content and viewport
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && modalRef.current) {
       const calculatePosition = () => {
         const viewportHeight = window.innerHeight;
         const viewportWidth = window.innerWidth;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-        // Modal dimensions (approximate)
+        // Get actual modal dimensions
+        const modalElement = modalRef.current;
+        if (!modalElement) return;
+
+        // Temporarily make modal visible to measure its dimensions
+        const originalVisibility = modalElement.style.visibility;
+        const originalPosition = modalElement.style.position;
+        modalElement.style.visibility = 'hidden';
+        modalElement.style.position = 'absolute';
+        modalElement.style.top = '0';
+        modalElement.style.left = '0';
+
+        // Force a layout to get accurate measurements
+        void modalElement.offsetHeight;
+
+        const modalRect = modalElement.getBoundingClientRect();
+        const modalHeight = modalRect.height;
+        const modalWidth = modalRect.width;
+
+        // Calculate sidebar offset
+        const sidebarWidth = sidebarOpen ? 280 : 0;
+        const availableWidth = viewportWidth - sidebarWidth;
+
+        // Calculate positions
         const isMobile = viewportWidth <= 768;
         const modalHeight = Math.min(viewportHeight * (isMobile ? 0.9 : 0.85), 600);
 
@@ -41,21 +65,40 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         const padding = isMobile ? 10 : 20;
         const minTop = scrollTop + padding;
         const maxTop = scrollTop + viewportHeight - modalHeight - padding;
-        if (top > maxTop) {
-          top = maxTop
-        } else {
-          top = Math.max(minTop, top);
+
+        if (top < minTop) {
+          top = minTop;
+        } else if (top > maxTop) {
+          top = maxTop;
         }
-        setModalPosition({top});
-        
+
+        // Ensure modal stays within horizontal bounds
+        const minLeft = padding;
+        const maxLeft = viewportWidth - modalWidth - padding;
+
+        if (left < minLeft) {
+          left = minLeft;
+        } else if (left > maxLeft) {
+          left = maxLeft;
+        }
+
+        // Restore original styles
+        modalElement.style.visibility = originalVisibility;
+        modalElement.style.position = originalPosition;
+
+        setModalPosition({ top, left });
         setIsPositioned(true);
       };
 
       // Reset positioning state when modal opens
       setIsPositioned(false);
-      calculatePosition();
 
-      // Recalculate position if window is resized while modal is open
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+      calculatePosition();
+      });
+
+      // Recalculate position if window is resized or scrolled
       window.addEventListener('resize', calculatePosition);
       window.addEventListener('scroll', calculatePosition);
 
@@ -64,7 +107,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         window.removeEventListener('scroll', calculatePosition);
       };
     }
-  }, [isOpen, sidebarOpen]);
+  }, [isOpen, sidebarOpen, item]); // Add item to dependencies to recalculate when content changes
 
   // Handle escape key to close modal and prevent main-content scroll
   useEffect(() => {
@@ -180,6 +223,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div
+        ref={modalRef}
         className={`modal-content item-details-modal ${isPositioned ? 'positioned' : 'positioning'}`}
         onClick={e => e.stopPropagation()}
         style={{
