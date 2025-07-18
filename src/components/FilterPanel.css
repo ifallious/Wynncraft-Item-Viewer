@@ -35,6 +35,12 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Center the toggle button when sidebar is closed */
+.filter-panel.closed .filter-header {
+  justify-content: center;
+  padding: 12px;
+}
+
 .filter-header h2 {
   margin: 0;
   font-size: 1.4em;
@@ -68,6 +74,15 @@
   height: 32px;
   border-radius: 8px;
   outline: none;
+}
+
+/* Enhanced styling when sidebar is collapsed */
+.filter-panel.closed .toggle-button {
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.3);
 }
 
 .toggle-button:hover {
@@ -342,9 +357,20 @@
   .filter-panel.closed {
     width: 40px;
   }
-  
+
   .filter-header {
     padding: 20px;
+  }
+
+  /* Adjust toggle button for mobile */
+  .filter-panel.closed .filter-header {
+    padding: 8px;
+  }
+
+  .filter-panel.closed .toggle-button {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
   }
   
   .filter-content {
