@@ -34,15 +34,12 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         // Force a layout to get accurate measurements
         void modalElement.offsetHeight;
 
-        const modalRect = modalElement.getBoundingClientRect();
-        const modalHeight = modalRect.height;
-
         // Center within the main content area (relative to the viewport)
         // The main content starts at sidebarOffset and has width mainContentWidth
         const centerY = viewportHeight / 2;
 
         // Position modal in center of main content area, accounting for scroll
-        const top = scrollTop + centerY - (modalHeight / 2);
+        const top = scrollTop + centerY - (modalElement.height / 2);
 
         setModalPosition({top});
         setIsPositioned(true);
