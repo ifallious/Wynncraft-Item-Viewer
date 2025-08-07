@@ -223,10 +223,10 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="item-details-modal-overlay" onClick={onClose}>
       <div
         ref={modalRef}
-        className={`modal-content item-details-modal ${isPositioned ? 'positioned' : 'positioning'}`}
+        className={`item-details-modal ${isPositioned ? 'positioned' : 'positioning'}`}
         onClick={e => e.stopPropagation()}
         style={{
           position: 'absolute',

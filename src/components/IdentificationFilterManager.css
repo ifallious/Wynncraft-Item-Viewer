@@ -5,8 +5,8 @@
 .identification-filter-manager h4 {
   margin: 0 0 12px 0;
   font-size: 1em;
-  color: #55ffff;
-  border-bottom: 1px solid #555;
+  color: #c084fc;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.25);
   padding-bottom: 4px;
 }
 
@@ -21,8 +21,8 @@
 .filter-tag {
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #333 0%, #444 100%);
-  border: 1px solid #555;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.2);
   border-radius: 16px;
   padding: 4px 8px 4px 12px;
   font-size: 0.8em;
@@ -78,7 +78,7 @@
 
 .add-filter-form {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #555;
+  border: 1px solid rgba(168, 85, 247, 0.2);
   border-radius: 8px;
   padding: 16px;
   margin-top: 8px;

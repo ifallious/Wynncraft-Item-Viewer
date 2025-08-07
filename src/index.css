@@ -11,6 +11,16 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Glass + accent tokens */
+  --glass-bg: rgba(255, 255, 255, 0.045);
+  --glass-bg-2: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-hover: rgba(255, 255, 255, 0.22);
+  --glass-shadow: 0 10px 30px rgba(0,0,0,.35);
+  --accent-1: rgba(124, 58, 237, 0.45);  /* purple (subtle) */
+  --accent-2: rgba(34, 211, 238, 0.45);  /* cyan */
+  --accent-3: rgba(147, 51, 234, 0.35);  /* violet */
 }
 
 * {
@@ -22,7 +32,9 @@ body {
   padding: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  background: radial-gradient(1000px 500px at 10% -10%, #2a173a 0%, transparent 60%),
+              radial-gradient(1200px 600px at 120% 0%, #1b1126 0%, transparent 60%),
+              linear-gradient(135deg, #0a0a0a 0%, #141418 100%);
   color: #ffffff;
   overflow-x: hidden;
 }
@@ -44,20 +56,26 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #333;
+  background-color: #262635;
   color: #ffffff;
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
 button:hover {
-  background-color: #444;
+  background-color: #2f2f41;
 }
 
 button:focus,
-button:focus-visible {
-  outline: 2px solid #a855f7;
-  outline-offset: 2px;
+button:focus-visible,
+[data-slot="button"]:focus,
+[data-slot="button"]:focus-visible {
+  outline: 0;
+  /* No box-shadow on focus — use a pronounced drop-shadow glow instead */
+  box-shadow: none;
+  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.65))
+          drop-shadow(0 0 40px rgba(147, 51, 234, 0.45))
+          drop-shadow(0 0 64px rgba(124, 58, 237, 0.32));
 }
 
 button:disabled {
@@ -70,17 +88,28 @@ input[type="search"] {
   font-family: inherit;
   font-size: 1em;
   border-radius: 6px;
-  border: 1px solid #444;
-  background-color: #1a1a1a;
+  border: 1px solid #3a3a4a;
+  background-color: #14141c;
   color: #ffffff;
   padding: 0.5em;
 }
 
 input[type="text"]:focus,
-input[type="search"]:focus {
-  outline: 2px solid #a855f7;
-  outline-offset: 2px;
-  border-color: #a855f7;
+input[type="text"]:focus-visible,
+input[type="search"]:focus,
+input[type="search"]:focus-visible,
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+.search-input:focus,
+.search-input:focus-visible {
+  outline: 0;
+  border-color: rgba(167, 139, 250, 0.55);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.35),
+              0 0 22px rgba(124, 58, 237, 0.45);
 }
 
 /* Scrollbar styling */
@@ -93,7 +122,7 @@ input[type="search"]:focus {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #444;
+  background: linear-gradient(180deg, #3a2b4d, #2b2b3a);
   border-radius: 6px;
 }
 
@@ -115,4 +144,297 @@ input[type="search"]:focus {
   src: url('/fonts/Minecraftia.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+}
+
+/* Universal animated sweeping hover effect for buttons */
+:where(
+  button,
+  [data-slot="button"],
+  .filter-button,
+  .item-type-button,
+  .toggle-button,
+  .select-major-ids-button,
+  .sort-button,
+  .retry-btn,
+  .error-container button
+) {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Phase 1: glistening border sweep */
+:where(
+  button,
+  [data-slot="button"],
+  .filter-button,
+  .item-type-button,
+  .toggle-button,
+  .select-major-ids-button,
+  .sort-button,
+  .retry-btn,
+  .error-container button
+)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 3px; /* border ring thickness */
+  background: linear-gradient(
+    120deg,
+    transparent 46%,
+    rgba(255, 255, 255, 0.18) 49%,
+    rgba(167, 139, 250, 0.55) 50%,
+    rgba(255, 255, 255, 0.18) 51%,
+    transparent 54%
+  );
+  background-size: 500% 500%;
+  background-position: 100% 100%;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+  /* Show only the border ring area */
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0.2; /* subtle when idle */
+  filter: blur(0.6px); /* smooth out the ring */
+  will-change: background-position;
+}
+
+/* Remove shimmering overlay from buttons (border ring only) */
+:where(
+  button,
+  [data-slot="button"],
+  .filter-button,
+  .item-type-button,
+  .toggle-button,
+  .select-major-ids-button,
+  .sort-button,
+  .retry-btn,
+  .error-container button
+)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.985);
+    mix-blend-mode: screen;
+    background-image:
+    radial-gradient(80% 100% at 0% 0%, rgba(167,139,250,0.22), transparent 60%),
+    radial-gradient(80% 100% at 100% 100%, rgba(34,211,238,0.18), transparent 60%);
+    background-size: 180% 180%, 180% 180%, 240% 240%;
+    background-position: 8% 0%, 92% 100%, -160% -160%;
+    filter: blur(0px);
+    transition: opacity 420ms ease, transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:where(
+  button,
+  [data-slot="button"],
+  .filter-button,
+  .item-type-button,
+  .toggle-button,
+  .select-major-ids-button,
+  .sort-button,
+  .retry-btn,
+  .error-container button
+):hover::before,
+:where(
+  button,
+  [data-slot="button"],
+  .filter-button,
+  .item-type-button,
+  .toggle-button,
+  .select-major-ids-button,
+  .sort-button,
+  .retry-btn,
+  .error-container button
+):focus-visible::before {
+  animation: ring-sweep-diag 1000ms cubic-bezier(0.22, 1, 0.36, 1) 1 both;
+  opacity: 1; /* brighter on interaction */
+}
+
+/* Trigger the shimmering overlay after the sweep */
+:where(
+  button,
+  [data-slot="button"],
+  .filter-button,
+  .item-type-button,
+  .toggle-button,
+  .select-major-ids-button,
+  .sort-button,
+  .retry-btn,
+  .error-container button
+):hover::after,
+:where(
+  button,
+  [data-slot="button"],
+  .filter-button,
+  .item-type-button,
+  .toggle-button,
+  .select-major-ids-button,
+  .sort-button,
+  .retry-btn,
+  .error-container button
+):focus-visible::after {
+  opacity: 0.95;
+  transform: scale(1);
+  animation: magic-shimmer 1200ms ease-out 1 both;
+}
+
+@keyframes magic-shimmer {
+  0% {
+    background-position: 8% 0%, 92% 100%, -160% -160%;
+    filter: blur(0px);
+  }
+  50% {
+    background-position: 14% 6%, 86% 94%, 80% 80%;
+    filter: blur(0.2px);
+  }
+  100% {
+    background-position: 20% 10%, 80% 90%, 160% 160%;
+    filter: blur(0.35px);
+  }
+}
+
+@keyframes ring-sweep-diag {
+  from { background-position: 100% 100%; }
+  to { background-position: -100% -100%; }
+}
+
+/* Phase 2: smooth gradient fill after the border sweep */
+:where(
+  button,
+  [data-slot="button"],
+  .filter-button,
+  .item-type-button,
+  .toggle-button,
+  .select-major-ids-button,
+  .sort-button,
+  .retry-btn,
+  .error-container button
+) {
+  /* add a gradient layer that expands on hover */
+  background-image: linear-gradient(90deg, var(--accent-1), var(--accent-3));
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left center;
+  transition: background-size 950ms cubic-bezier(0.4, 0, 0.2, 1) 180ms, filter 320ms ease;
+}
+
+/* Hover glow: subtle */
+:where(
+  button,
+  [data-slot="button"],
+  .filter-button,
+  .item-type-button,
+  .toggle-button,
+  .select-major-ids-button,
+  .sort-button,
+  .retry-btn,
+  .error-container button
+):hover {
+  background-size: 100% 100%;
+  filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.45))
+          drop-shadow(0 0 18px rgba(124, 58, 237, 0.28));
+}
+
+/* Focus glow: stronger and box-shadow suppressed */
+:where(
+  button,
+  [data-slot="button"],
+  .filter-button,
+  .item-type-button,
+  .toggle-button,
+  .select-major-ids-button,
+  .sort-button,
+  .retry-btn,
+  .error-container button
+):focus-visible {
+  background-size: 100% 100%;
+  box-shadow: none !important;
+  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.55))
+          drop-shadow(0 0 40px rgba(147, 51, 234, 0.35))
+          drop-shadow(0 0 64px rgba(124, 58, 237, 0.22));
+}
+
+/* Avoid glow for disabled buttons */
+:where(
+  button:disabled,
+  [data-slot="button"][disabled],
+  .filter-button:disabled,
+  .item-type-button:disabled,
+  .toggle-button:disabled,
+  .select-major-ids-button:disabled,
+  .sort-button:disabled,
+  .retry-btn:disabled,
+  .error-container button:disabled
+) {
+  filter: none !important;
+}
+
+/* Prevent shimmer on disabled buttons */
+:where(
+  button:disabled,
+  [data-slot="button"][disabled],
+  .filter-button:disabled,
+  .item-type-button:disabled,
+  .toggle-button:disabled,
+  .select-major-ids-button:disabled,
+  .sort-button:disabled,
+  .retry-btn:disabled,
+  .error-container button:disabled
+)::after {
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(
+    button,
+    [data-slot="button"],
+    .filter-button,
+    .item-type-button,
+    .toggle-button,
+    .select-major-ids-button,
+    .sort-button,
+    .retry-btn,
+    .error-container button
+  )::before {
+    transition: none;
+  }
+  :where(
+    button,
+    [data-slot="button"],
+    .filter-button,
+    .item-type-button,
+    .toggle-button,
+    .select-major-ids-button,
+    .sort-button,
+    .retry-btn,
+    .error-container button
+  )::after {
+    transition: none;
+    animation: none !important;
+    opacity: 0;
+    transform: none;
+  }
+  :where(
+    button,
+    [data-slot="button"],
+    .filter-button,
+    .item-type-button,
+    .toggle-button,
+    .select-major-ids-button,
+    .sort-button,
+    .retry-btn,
+    .error-container button
+  ) {
+    transition: none;
+    background-size: 100% 100%;
+    filter: none;
+  }
 }

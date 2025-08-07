@@ -24,12 +24,12 @@
 .wc-percent { font-weight: bold; margin-left: 4px; }
 
 .item-card {
-  background: linear-gradient(135deg, #1a0a1a 0%, #181818 100%);
-  border: 2.5px solid #a855f7;
+  background: linear-gradient(135deg, rgba(16, 16, 24, 0.6) 0%, rgba(12, 12, 20, 0.65) 100%);
+  border: 1px solid var(--glass-border);
   border-radius: 6px;
   padding: 10px 14px 10px 14px;
   margin: 8px;
-  box-shadow: 0 0 10px #000a, 0 2px 8px #0008;
+  box-shadow: var(--glass-shadow), 0 0 0 1px rgba(255,255,255,0.04) inset;
   color: #fff;
   min-width: 260px;
   max-width: 340px;
@@ -91,24 +91,26 @@
 .item-card:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow:
-    0 0 20px var(--rarity-color, rgba(168, 85, 247, 0.5)),
-    0 8px 25px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    0 0 18px rgba(139, 92, 246, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+  border-color: var(--glass-border-hover);
 }
 
 .item-card[style*="cursor: pointer"]:hover {
   transform: translateY(-4px) scale(1.03);
   box-shadow:
-    0 0 25px var(--rarity-color, rgba(168, 85, 247, 0.6)),
-    0 10px 30px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 12px 32px rgba(0, 0, 0, 0.55),
+    0 0 22px rgba(139, 92, 246, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
     inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+  border-color: var(--glass-border-hover);
 }
 
 .item-header {
   margin-bottom: 8px;
-  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.25);
   padding-bottom: 6px;
   text-align: center;
 }

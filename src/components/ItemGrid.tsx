@@ -155,10 +155,6 @@ export const ItemGrid: React.FC<ItemGridProps> = ({ items, sidebarOpen = true })
         )}
       </div>
 
-      <div className="page-info">
-        Showing {displayedItems.length} of {items.length} items
-      </div>
-
       <ItemDetailsModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

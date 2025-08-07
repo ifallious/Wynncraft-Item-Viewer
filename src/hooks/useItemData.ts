@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { WynncraftItem } from '../types.js';
+import { mockItems } from '../api/mockData.js';
 
 interface UseItemDataReturn {
   items: Record<string, WynncraftItem>;
@@ -29,8 +30,18 @@ export const useItemData = (): UseItemDataReturn => {
         setItems(data);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to fetch items';
-        setError(errorMessage);
         console.error('Error fetching items:', err);
+        // Fallback to mock data so the app remains usable offline or when API fails
+        try {
+          if (mockItems && Object.keys(mockItems).length > 0) {
+            setItems(mockItems as Record<string, WynncraftItem>);
+            setError(`Using mock data: ${errorMessage}`);
+          } else {
+            setError(errorMessage);
+          }
+        } catch (mockErr) {
+          setError(errorMessage);
+        }
       } finally {
         setLoading(false);
       }

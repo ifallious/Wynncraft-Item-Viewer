@@ -58,7 +58,7 @@ function App() {
     );
   }
 
-  if (error) {
+  if (error && itemsArray.length === 0) {
     return (
       <div className="error-container">
         <h2>Error Loading Items</h2>
@@ -69,6 +69,9 @@ function App() {
       </div>
     );
   }
+
+  // If we have an error but items exist (mock fallback), show a non-blocking banner
+  const showWarningBanner = !!error && itemsArray.length > 0;
 
   return (
     <div className="app">
@@ -81,6 +84,12 @@ function App() {
       />
 
       <main className={`main-content ${filterPanelOpen ? 'with-sidebar' : 'full-width'}`}>
+        {showWarningBanner && (
+          <div className="warning-banner" role="status">
+            <span>Could not reach Wynncraft API. Showing mock data.</span>
+            <button onClick={() => window.location.reload()} className="retry-btn">Retry</button>
+          </div>
+        )}
         <header className="app-header">
           <h1>Wynncraft Item Viewer</h1>
           <p>Browse and filter all items from the Wynncraft MMORPG</p>

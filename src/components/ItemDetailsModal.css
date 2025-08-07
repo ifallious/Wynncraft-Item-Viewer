@@ -6,7 +6,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
   z-index: 1000;
   /* Remove flexbox centering for custom positioning */
   animation: fadeInOverlay 0.3s ease-out forwards;
@@ -29,12 +29,12 @@
   width: 95%;
   max-height: 80vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(30, 24, 40, 0.92) 0%, rgba(18, 18, 26, 0.94) 100%);
   border-radius: 8px;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  backdrop-filter: blur(12px);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  backdrop-filter: blur(16px);
   z-index: 1001; /* Ensure it's above the overlay */
   overflow-y: auto; /* Allow scrolling if content is too tall */
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth positioning and appearance */
