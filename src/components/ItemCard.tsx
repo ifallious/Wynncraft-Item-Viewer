@@ -134,18 +134,74 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
     return stats;
   };
 
-  // Render identifications in Wynncraft style
+  // Render identifications grouped by type with extra spacing between groups
   const renderIdentifications = () => {
     if (!item.identifications) return null;
-    return Object.entries(item.identifications).map(([key, value]: [string, IdentificationValue | number]) => {
-      const displayValue = formatIdentification(key, value);
-      const numericValue = typeof value === 'number' ? value : (value && typeof value.raw === 'number' ? value.raw : 0);
-      return (
-        <div key={key} style={{ color: '#aaaaaa', display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span><span style={{ color: statColor(numericValue, key) }}>{numericValue > 0 ? '+' : ''}{displayValue}</span> {formatIdentificationName(key)}</span>
-        </div>
-      );
+
+    type RangeValue = { min: number; max: number };
+    type IdValue = number | RangeValue | IdentificationValue;
+
+    const entries = Object.entries(item.identifications) as [string, IdValue][];
+    const consumed = new Set<string>();
+
+    const take = (predicate: (k: string) => boolean) => {
+      const group: [string, IdValue][] = [];
+      for (const [k, v] of entries) {
+        if (!consumed.has(k) && predicate(k.toLowerCase())) {
+          consumed.add(k);
+          group.push([k, v]);
+        }
+      }
+      return group;
+    };
+
+    // Group definitions
+    const elementPrefixes = ['earth', 'water', 'fire', 'air', 'thunder', 'neutral'];
+    const skillGroup = take(k => {
+      const isCoreSkill = k.includes('strength') || k.includes('dexterity') || k.includes('intelligence') || k.includes('agility');
+      const isDefenceSkill = k.includes('defence') && !elementPrefixes.some(e => k.includes(e));
+      return isCoreSkill || isDefenceSkill;
     });
+
+    const damageGroup = take(k => k.includes('damage'));
+    // Mana-related: regen, steal, and spell cost reductions (raw and %)
+    const manaGroup = take(k => k.includes('manaregen') || k.includes('manasteal') || k.includes('spellcost'));
+    // Movement: include sprint, walk speed, and jump height
+    const movementGroup = take(k => k.includes('sprint') || k.includes('walkspeed') || k.includes('jumpheight'));
+    // Health/Healing: raw and % health regen, healing efficiency, health bonus, flat health, and life steal
+    const healthGroup = take(k => k.includes('healthregen') || k.includes('healingefficiency') || k.includes('healthbonus') || (k === 'health') || k.includes('lifesteal'));
+    const lootXpGroup = take(k => k.includes('loot') || k.includes('xpbonus') || k.includes('lootquality'));
+    const defenceGroup = take(k => k.includes('defence'));
+    const otherGroup = take(() => true); // whatever remains
+
+    type Group = [string, [string, IdValue][]];
+    const groups: Group[] = [];
+    if (skillGroup.length) groups.push(['skills', skillGroup]);
+    if (damageGroup.length) groups.push(['damage', damageGroup]);
+    if (defenceGroup.length) groups.push(['defence', defenceGroup]);
+    if (healthGroup.length) groups.push(['health', healthGroup]);
+    if (manaGroup.length) groups.push(['mana', manaGroup]);
+    if (movementGroup.length) groups.push(['movement', movementGroup]);
+    if (lootXpGroup.length) groups.push(['lootxp', lootXpGroup]);
+    if (otherGroup.length) groups.push(['other', otherGroup]);
+
+    const hasRaw = (val: IdValue): val is IdentificationValue & { raw: number } => {
+      return typeof val === 'object' && val !== null && 'raw' in (val as Record<string, unknown>) && typeof (val as Record<string, unknown>).raw === 'number';
+    };
+
+    return groups.map(([groupName, group]) => (
+      <div key={`group-${groupName}`} style={{ marginTop: 6 }}>
+        {group.map(([key, value]) => {
+          const displayValue = formatIdentification(key, value);
+          const numericValue = typeof value === 'number' ? value : (hasRaw(value) ? value.raw : 0);
+          return (
+            <div key={key} style={{ color: '#aaaaaa', display: 'flex', alignItems: 'center', gap: 4, marginTop: 1 }}>
+              <span><span style={{ color: statColor(numericValue, key) }}>{numericValue > 0 ? '+' : ''}{displayValue}</span> {formatIdentificationName(key)}</span>
+            </div>
+          );
+        })}
+      </div>
+    ));
   };
 
   // Render major IDs

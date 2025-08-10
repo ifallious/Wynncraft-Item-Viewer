@@ -102,7 +102,7 @@ function App() {
           totalCount={itemsArray.length}
         />
 
-        <ItemGrid items={filteredItems} sidebarOpen={filterPanelOpen} />
+        <ItemGrid items={filteredItems}/>
       </main>
     </div>
   );

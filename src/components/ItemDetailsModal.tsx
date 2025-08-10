@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, type JSX } from 'react';
+import { createPortal } from 'react-dom';
 import type { WynncraftItem } from '../types.js';
 import { getRarityColor } from '../utils/filterUtils.js';
 import './ItemDetailsModal.css';
@@ -7,16 +8,15 @@ interface ItemDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   item: (WynncraftItem & { displayName: string }) | null;
-  sidebarOpen?: boolean; // Add sidebar state to calculate proper centering
+  sidebarOpen?: boolean;
 }
 
 export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
   isOpen,
   onClose,
   item,
-  sidebarOpen = true
+  sidebarOpen: _sidebarOpen = true
 }) => {
-  const [modalPosition, setModalPosition] = useState({ top: 0});
   const [isPositioned, setIsPositioned] = useState(false);
   const [expandedCoordinates, setExpandedCoordinates] = useState<Record<string, boolean>>({});
   const modalRef = useRef<HTMLDivElement>(null);
@@ -29,73 +29,30 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
     }));
   };
 
-  // Calculate modal position based on actual content and viewport
+  // No custom positioning needed; overlay handles centering
   useEffect(() => {
-    if (isOpen && modalRef.current) {
-      const calculatePosition = () => {
-        const viewportHeight = window.innerHeight;
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-        // Get actual modal dimensions
-        const modalElement = modalRef.current;
-        if (!modalElement) return;
-
-        // Force a layout to get accurate measurements
-        void modalElement.offsetHeight;
-
-        const modalRect = modalElement.getBoundingClientRect();
-        const modalHeight = modalRect.height;
-
-        // Center within the main content area (relative to the viewport)
-        // The main content starts at sidebarOffset and has width mainContentWidth
-        const centerY = viewportHeight / 2;
-
-        // Position modal in center of main content area, accounting for scroll
-        const top = scrollTop + centerY - (modalHeight / 2);
-       
-        setModalPosition({top});
-        setIsPositioned(true);
-      };
-
-      // Reset positioning state when modal opens
+    if (isOpen) {
+      setIsPositioned(true);
+    } else {
       setIsPositioned(false);
-
-      // Use requestAnimationFrame to ensure DOM is ready
-      requestAnimationFrame(() => {
-        calculatePosition();
-      });
-
-      // Recalculate position if window is resized or scrolled
-      window.addEventListener('resize', calculatePosition);
-      window.addEventListener('scroll', calculatePosition);
-
-      return () => {
-        window.removeEventListener('resize', calculatePosition);
-        window.removeEventListener('scroll', calculatePosition);
-      };
     }
-  }, [isOpen, sidebarOpen, item]); // Add item to dependencies to recalculate when content changes
+  }, [isOpen]);
 
   // Handle escape key to close modal and prevent main-content scroll
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
+      if (event.key === 'Escape') onClose();
     };
 
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      const mainContent = document.querySelector('.main-content') as HTMLElement;
-      if (mainContent) {
-        mainContent.style.overflow = 'hidden';
-      }
+    const doc = (globalThis as unknown as { document?: Document }).document;
+    if (isOpen && doc) {
+      doc.addEventListener('keydown', handleEscape);
+      const mainContent = doc.querySelector('.main-content') as HTMLElement | null;
+      if (mainContent) mainContent.style.overflow = 'hidden';
       return () => {
-        document.removeEventListener('keydown', handleEscape);
-        const mainContent = document.querySelector('.main-content') as HTMLElement;
-        if (mainContent) {
-          mainContent.style.overflow = 'unset';
-        }
+        doc.removeEventListener('keydown', handleEscape);
+        const mainContent2 = doc.querySelector('.main-content') as HTMLElement | null;
+        if (mainContent2) mainContent2.style.overflow = 'unset';
       };
     }
   }, [isOpen, onClose]);
@@ -222,18 +179,13 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
     );
   };
 
-  return (
+  const content = (
     <div className="item-details-modal-overlay" onClick={onClose}>
       <div
         ref={modalRef}
         className={`item-details-modal ${isPositioned ? 'positioned' : 'positioning'}`}
         onClick={e => e.stopPropagation()}
-        style={{
-          position: 'absolute',
-          top: modalPosition.top,
-          left: "25%",
-          transform: 'none' // Override any CSS transform
-        }}
+        style={{position: 'relative'}}
       >
         <div className="modal-header">
           <div className="item-title">
@@ -242,7 +194,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
           </div>
           <button className="close-button" onClick={onClose}>×</button>
         </div>
-        
+
         <div className="modal-body">
           <div className="item-summary">
             <div className="summary-row">
@@ -273,4 +225,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
       </div>
     </div>
   );
+
+  const portalTarget = (globalThis as unknown as { document?: { body?: HTMLElement } }).document?.body ?? null;
+  return portalTarget ? createPortal(content, portalTarget) : content;
 };

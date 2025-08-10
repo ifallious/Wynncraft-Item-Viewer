@@ -234,12 +234,16 @@ export const formatIdentificationName = (key: string): string => {
     'airDamage': 'Air Damage',
     'neutralDamage': 'Neutral Damage',
     'healthRegen': 'Health Regen',
+    'rawHealthRegen': 'Health Regen',
     'manaRegen': 'Mana Regen',
     'spellDamage': 'Spell Damage',
     'spellCost': 'Spell Cost',
     'rawSpellCost': 'Spell Cost',
-    'rawSpellDamage': 'Spell Damage',
-    'rawHealthRegen': 'Health Regen',
+    'healingEfficiency': 'Healing Efficiency',
+    'lifeSteal': 'Life Steal',
+    'healthBonus': 'Health',
+    'health': 'Health',
+    'jumpHeight': 'Jump Height',
     'rawManaRegen': 'Mana Regen',
     'rawHealth': 'Health',
     'rawMana': 'Mana',
@@ -282,6 +286,15 @@ export const isSpellCostAttribute = (key: string): boolean => {
 };
 
 export const formatIdentification = (key: string, value: number | { min: number; max: number } | { raw?: number; percent?: number } | null): string => {
+  const lowerKey = key.toLowerCase();
+
+  // Time-based suffixes and special unit handling
+  const timeSuffix =
+    (lowerKey.includes('lifesteal') || lowerKey.includes('lifestyle')) ? '/3s' :
+    lowerKey.includes('manasteal') ? '/3s' :
+    lowerKey.includes('manaregen') ? '/5s' :
+    '';
+
   // Special cases that should not have %
   const noPercentCases = [
     'poison',
@@ -292,16 +305,18 @@ export const formatIdentification = (key: string, value: number | { min: number;
     'dexterity',
     'intelligence',
     'agility',
+    'healthbonus',
+    'jumpheight',
   ];
 
-  // Check if the key contains any of the no-percent cases
-  const shouldNotAddPercent = noPercentCases.some(case_ => key.toLowerCase().includes(case_));
+  // Check if the key contains any of the no-percent cases, or if time-based suffix enforces non-percent
+  const shouldNotAddPercent = timeSuffix !== '' || noPercentCases.some(case_ => lowerKey.includes(case_));
 
   if (typeof value === 'object' && value !== null && 'min' in value && 'max' in value) {
-    return `${value.min} to ${value.max}${shouldNotAddPercent ? '' : '%'}`;
+    return `${value.min} to ${value.max}${shouldNotAddPercent ? '' : '%'}${timeSuffix}`;
   }
   if (typeof value === 'number') {
-    return `${value}${shouldNotAddPercent ? '' : '%'}`;
+    return `${value}${shouldNotAddPercent ? '' : '%'}${timeSuffix}`;
   }
   return String(value);
 };

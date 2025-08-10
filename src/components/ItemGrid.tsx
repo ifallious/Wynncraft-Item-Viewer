@@ -6,13 +6,12 @@ import './ItemGrid.css';
 
 interface ItemGridProps {
   items: (WynncraftItem & { displayName: string })[];
-  sidebarOpen?: boolean;
 }
 
 type SortOption = 'name' | 'level' | 'rarity' | 'type' | 'dps';
 type SortDirection = 'asc' | 'desc';
 
-export const ItemGrid: React.FC<ItemGridProps> = ({ items, sidebarOpen = true }) => {
+export const ItemGrid: React.FC<ItemGridProps> = ({ items }) => {
   const [sortBy, setSortBy] = useState<SortOption>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [visibleItems, setVisibleItems] = useState<number>(24);
@@ -159,7 +158,6 @@ export const ItemGrid: React.FC<ItemGridProps> = ({ items, sidebarOpen = true })
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         item={selectedItem}
-        sidebarOpen={sidebarOpen}
       />
     </div>
   );

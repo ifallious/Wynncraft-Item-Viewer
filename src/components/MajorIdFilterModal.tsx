@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import './MajorIdFilterModal.css';
 
 interface MajorIdFilterModalProps {
@@ -16,6 +17,15 @@ export const MajorIdFilterModal: React.FC<MajorIdFilterModalProps> = ({
   availableMajorIds,
   onMajorIdsChange
 }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); };
+    const win = globalThis as unknown as { addEventListener?: any; removeEventListener?: any };
+    if (!win.addEventListener) return;
+    win.addEventListener('keydown', handleEscape);
+    return () => win.removeEventListener?.('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleCheckboxChange = (majorId: string) => {
@@ -32,7 +42,7 @@ export const MajorIdFilterModal: React.FC<MajorIdFilterModalProps> = ({
       .trim();
   };
 
-  return (
+  const content = (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
@@ -56,4 +66,7 @@ export const MajorIdFilterModal: React.FC<MajorIdFilterModalProps> = ({
       </div>
     </div>
   );
+
+  const portalTarget = (globalThis as unknown as { document?: { body?: HTMLElement } }).document?.body ?? null;
+  return portalTarget ? createPortal(content, portalTarget) : content;
 }; 

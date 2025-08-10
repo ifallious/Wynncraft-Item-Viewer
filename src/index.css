@@ -13,9 +13,9 @@
   -moz-osx-font-smoothing: grayscale;
 
   /* Glass + accent tokens */
-  --glass-bg: rgba(255, 255, 255, 0.045);
-  --glass-bg-2: rgba(255, 255, 255, 0.06);
-  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.025);
+  --glass-bg-2: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.06);
   --glass-border-hover: rgba(255, 255, 255, 0.22);
   --glass-shadow: 0 10px 30px rgba(0,0,0,.35);
   --accent-1: rgba(124, 58, 237, 0.45);  /* purple (subtle) */
