@@ -335,6 +335,7 @@ export const formatIdentificationNameForModal = (key: string): string => {
       'agility',
       'healthbonus',
       'jumpheight',
+      'lifesteal'
     ];
 
     const shouldSkipPercent = noPercentCases.some(case_ => lowerKey.includes(case_));

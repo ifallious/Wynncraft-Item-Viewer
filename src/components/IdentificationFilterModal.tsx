@@ -35,7 +35,7 @@ function categorizeIdentification(idKey: string): string {
   const k = idKey.toLowerCase();
 
   // 1) Elemental Defenses - check before skillpoints to avoid misclassification
-  if (isOneOf(k, ['earthdefence', 'thunderdefence', 'waterdefence', 'firedefence', 'airdefence', 'neutraldefence'])) {
+  if (isOneOf(k, ['earthdefence', 'thunderdefence', 'waterdefence', 'firedefence', 'airdefence', 'neutraldefence', 'elementaldefence'])) {
     return 'misc'; // Put elemental defenses in miscellaneous
   }
 
@@ -88,7 +88,7 @@ function categorizeIdentification(idKey: string): string {
   if (isOneOf(k, ['healthregen', 'healingefficiency', 'healthbonus', 'lifesteal']) || k === 'health') return 'health';
 
   // 9) XP + Loot
-  if (isOneOf(k, ['xpbonus', 'lootbonus', 'stealing', 'lootquality'])) return 'xp-loot';
+  if (isOneOf(k, ['xpbonus', 'lootbonus', 'stealing', 'lootquality', 'gatherspeed'])) return 'xp-loot';
 
   // 10) Misc
   return 'misc';
