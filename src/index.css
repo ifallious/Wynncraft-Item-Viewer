@@ -68,6 +68,8 @@ button:hover {
 
 button:focus,
 button:focus-visible,
+input:focus,
+input:focus-visible,
 [data-slot="button"]:focus,
 [data-slot="button"]:focus-visible {
   outline: 0;
@@ -344,6 +346,7 @@ textarea:focus-visible,
 
 /* Focus glow: stronger and box-shadow suppressed */
 :where(
+  input,
   button,
   [data-slot="button"],
   .filter-button,
