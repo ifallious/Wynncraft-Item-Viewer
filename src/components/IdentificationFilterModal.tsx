@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import type { IdentificationFilter } from '../types.js';
-import { formatIdentificationName } from '../utils/filterUtils.js';
+import { formatIdentificationNameForModal } from '../utils/filterUtils.js';
 import './IdentificationFilterModal.css';
 
 interface IdentificationFilterModalProps {
@@ -33,38 +33,64 @@ const isOneOf = (key: string, parts: string[]) => parts.some(p => key.includes(p
 
 function categorizeIdentification(idKey: string): string {
   const k = idKey.toLowerCase();
-  // 1) Skillpoints
-  if (isOneOf(k, ['strength', 'dexterity', 'intelligence', 'agility', 'defence'])) return 'skillpoints';
 
-  // 2) Elemental Damages split per element
-  if (k.includes('earthdamage')) return 'earth-damage';
-  if (k.includes('thunderdamage')) return 'thunder-damage';
-  if (k.includes('waterdamage')) return 'water-damage';
-  if (k.includes('firedamage')) return 'fire-damage';
-  if (k.includes('airdamage')) return 'air-damage';
+  // 1) Elemental Defenses - check before skillpoints to avoid misclassification
+  if (isOneOf(k, ['earthdefence', 'thunderdefence', 'waterdefence', 'firedefence', 'airdefence', 'neutraldefence'])) {
+    return 'misc'; // Put elemental defenses in miscellaneous
+  }
 
-  // 3) Elemental Damage universal boost (best-effort key guesses)
+  // 2) Skillpoints - exclude elemental defenses
+  if (isOneOf(k, ['strength', 'dexterity', 'intelligence', 'agility']) ||
+      (k.includes('defence') && !isOneOf(k, ['earthdefence', 'thunderdefence', 'waterdefence', 'firedefence', 'airdefence', 'neutraldefence']))) {
+    return 'skillpoints';
+  }
+
+  // 3) Elemental Damages split per element - improved pattern matching
+  // Earth damage
+  if (k.includes('earth') && (k.includes('damage') || k.includes('mainattack') || k.includes('spell'))) {
+    return 'earth-damage';
+  }
+  // Thunder damage
+  if (k.includes('thunder') && (k.includes('damage') || k.includes('mainattack') || k.includes('spell'))) {
+    return 'thunder-damage';
+  }
+  // Water damage
+  if (k.includes('water') && (k.includes('damage') || k.includes('mainattack') || k.includes('spell'))) {
+    return 'water-damage';
+  }
+  // Fire damage
+  if (k.includes('fire') && (k.includes('damage') || k.includes('mainattack') || k.includes('spell'))) {
+    return 'fire-damage';
+  }
+  // Air damage
+  if (k.includes('air') && (k.includes('damage') || k.includes('mainattack') || k.includes('spell'))) {
+    return 'air-damage';
+  }
+
+  // 4) Elemental Damage universal boost (best-effort key guesses)
   if (isOneOf(k, ['elementaldamage', 'elemental_damage', 'elemental'])) return 'elemental-damage';
 
-  // 4) Regular Damage
+  // 5) Regular Damage - exclude elemental damage that was already categorized
   if (
-    isOneOf(k, ['neutraldamage', 'melee', 'damagedealt', 'basemelee', 'mainattack']) ||
-    (k.includes('damage') && !isOneOf(k, ['earthdamage','thunderdamage','waterdamage','firedamage','airdamage']))
+    isOneOf(k, ['neutraldamage', 'melee', 'damagedealt', 'basemelee']) ||
+    (k.includes('mainattack') && !isOneOf(k, ['earth', 'thunder', 'water', 'fire', 'air'])) ||
+    (k.includes('spelldamage') && !isOneOf(k, ['earth', 'thunder', 'water', 'fire', 'air'])) ||
+    (k.includes('damage') && !isOneOf(k, ['earth', 'thunder', 'water', 'fire', 'air', 'elemental']))
   ) return 'regular-damage';
 
-  // 5) Movement
+  // 6) Movement
   if (isOneOf(k, ['walkspeed', 'sprint', 'jumpheight'])) return 'movement';
 
-  // 6) Mana
-  if (isOneOf(k, ['manaregen', 'manasteal', 'spellcost'])) return 'mana';
+  // 7) Mana
+  if (isOneOf(k, ['manaregen', 'manasteal', 'spellcost', 'maxmana'])) return 'mana';
 
-  // 7) Health
+  // 8) Health
   if (isOneOf(k, ['healthregen', 'healingefficiency', 'healthbonus', 'lifesteal']) || k === 'health') return 'health';
 
-  // 8) XP + Loot
-  if (isOneOf(k, ['xpbonus', 'lootbonus', 'stealing'])) return 'xp-loot';
+  // 9) XP + Loot
+  if (isOneOf(k, ['xpbonus', 'lootbonus', 'stealing', 'lootquality'])) return 'xp-loot';
 
-  // 9) Misc
+  // 10) Misc
   return 'misc';
 }
 
@@ -102,7 +128,7 @@ export const IdentificationFilterModal: React.FC<IdentificationFilterModalProps>
       if (!m[key]) m['misc'].push(id); else m[key].push(id);
     });
     // Sort within groups by formatted name for UX
-    Object.values(m).forEach(list => list.sort((a,b) => formatIdentificationName(a).localeCompare(formatIdentificationName(b))));
+    Object.values(m).forEach(list => list.sort((a,b) => formatIdentificationNameForModal(a).localeCompare(formatIdentificationNameForModal(b))));
     return m;
   }, [availableIdentifications]);
 
@@ -157,7 +183,7 @@ export const IdentificationFilterModal: React.FC<IdentificationFilterModalProps>
             )}
             {filters.map(filter => (
               <div key={filter.id} className="selected-id-row">
-                <div className="selected-id-name">{formatIdentificationName(filter.name)}</div>
+                <div className="selected-id-name">{formatIdentificationNameForModal(filter.name)}</div>
                 <select
                   className="id-operator"
                   value={filter.operator}
@@ -207,9 +233,9 @@ export const IdentificationFilterModal: React.FC<IdentificationFilterModalProps>
                           key={name}
                           className={`id-button ${isSelected(name) ? 'active' : ''}`}
                           onClick={() => toggleSelect(name)}
-                          title={formatIdentificationName(name)}
+                          title={formatIdentificationNameForModal(name)}
                         >
-                          {formatIdentificationName(name)}
+                          {formatIdentificationNameForModal(name)}
                         </button>
                       ))}
                     </div>

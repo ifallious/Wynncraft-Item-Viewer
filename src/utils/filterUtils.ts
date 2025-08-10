@@ -268,6 +268,110 @@ export const formatIdentificationName = (key: string): string => {
     .trim();
 };
 
+export const formatIdentificationNameForModal = (key: string): string => {
+  // Handle special cases
+  const specialCases: Record<string, string> = {
+    'raw1stSpellCost': '1st Spell Cost',
+    'raw2ndSpellCost': '2nd Spell Cost',
+    'raw3rdSpellCost': '3rd Spell Cost',
+    'raw4thSpellCost': '4th Spell Cost',
+    '1stSpellCost': '1st Spell Cost',
+    '2ndSpellCost': '2nd Spell Cost',
+    '3rdSpellCost': '3rd Spell Cost',
+    '4thSpellCost': '4th Spell Cost',
+    'walkSpeed': 'Walk Speed',
+    'xpBonus': 'XP Bonus',
+    'earthDefence': 'Earth Defence',
+    'waterDefence': 'Water Defence',
+    'fireDefence': 'Fire Defence',
+    'thunderDefence': 'Thunder Defence',
+    'airDefence': 'Air Defence',
+    'neutralDefence': 'Neutral Defence',
+    'earthDamage': 'Earth Damage',
+    'waterDamage': 'Water Damage',
+    'fireDamage': 'Fire Damage',
+    'thunderDamage': 'Thunder Damage',
+    'airDamage': 'Air Damage',
+    'neutralDamage': 'Neutral Damage',
+    'healthRegen': 'Health Regen',
+    'rawHealthRegen': 'Health Regen',
+    'manaRegen': 'Mana Regen',
+    'spellDamage': 'Spell Damage',
+    'spellCost': 'Spell Cost',
+    'rawSpellCost': 'Spell Cost',
+    'healingEfficiency': 'Healing Efficiency',
+    'lifeSteal': 'Life Steal',
+    'healthBonus': 'Health',
+    'health': 'Health',
+    'jumpHeight': 'Jump Height',
+    'rawManaRegen': 'Mana Regen',
+    'rawHealth': 'Health',
+    'rawMana': 'Mana',
+    'rawDefence': 'Defence',
+    'rawStrength': 'Strength',
+    'rawDexterity': 'Dexterity',
+    'rawIntelligence': 'Intelligence',
+    'rawAgility': 'Agility',
+    'rawWalkSpeed': 'Walk Speed',
+    'rawXpBonus': 'XP Bonus',
+  };
+
+  if (specialCases[key]) {
+    const baseName = specialCases[key];
+    // Don't add suffix for raw identifications
+    if (key.toLowerCase().startsWith('raw')) {
+      return baseName;
+    }
+    // Add % suffix for non-raw identifications, except those in noPercentCases
+    const lowerKey = key.toLowerCase();
+    const noPercentCases = [
+      'poison',
+      'raw',
+      'mana',
+      'defence',
+      'strength',
+      'dexterity',
+      'intelligence',
+      'agility',
+      'healthbonus',
+      'jumpheight',
+    ];
+
+    const shouldSkipPercent = noPercentCases.some(case_ => lowerKey.includes(case_));
+    return shouldSkipPercent ? baseName : `${baseName} %`;
+  }
+
+  // For other cases, split by camelCase and capitalize
+  let formatted = key
+    .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+    .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
+    .replace(/raw/i, '') // Remove "raw" prefix
+    .trim();
+
+  // Don't add suffix for raw identifications
+  if (key.toLowerCase().startsWith('raw')) {
+    return formatted;
+  }
+
+  // Add % suffix for non-raw identifications, except those in noPercentCases
+  const lowerKey = key.toLowerCase();
+  const noPercentCases = [
+    'poison',
+    'raw',
+    'mana',
+    'defence',
+    'strength',
+    'dexterity',
+    'intelligence',
+    'agility',
+    'healthbonus',
+    'jumpheight',
+  ];
+
+  const shouldSkipPercent = noPercentCases.some(case_ => lowerKey.includes(case_));
+  return shouldSkipPercent ? formatted : `${formatted} %`;
+};
+
 export const isSpellCostAttribute = (key: string): boolean => {
   const spellCostKeys = [
     'spellCost',
