@@ -5,7 +5,7 @@
       "destination": "/api/items.ts"
     },
     { "source": "/(.*)", "destination": "/index.html" },
-    { "source": "/", "destination": "/index.html", "permanent": true }
+    { "source": "/", "destination": "/index.html" }
   ],
   "headers": [
     {
