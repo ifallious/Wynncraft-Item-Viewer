@@ -3,8 +3,8 @@ import type { WynncraftItem, FilterState, IdentificationFilter } from '../types.
 export const filterItems = (items: (WynncraftItem & { displayName: string })[], filters: FilterState): (WynncraftItem & { displayName: string })[] => {
   return items.filter(item => {
     // Search filter
-    if (filters.search && !item.displayName.toLowerCase().includes(filters.search.toLowerCase()) && 
-        !item.lore?.toLowerCase().includes(filters.search.toLowerCase())) {
+    if (filters.search && !item.displayName.toLowerCase().includes(filters.search.toLowerCase()) &&
+      !item.lore?.toLowerCase().includes(filters.search.toLowerCase())) {
       return false;
     }
 
@@ -54,10 +54,10 @@ export const filterItems = (items: (WynncraftItem & { displayName: string })[], 
     };
 
     if (!checkSkillRequirement(item.requirements.strength, filters.strengthMin, filters.strengthMax) ||
-        !checkSkillRequirement(item.requirements.dexterity, filters.dexterityMin, filters.dexterityMax) ||
-        !checkSkillRequirement(item.requirements.intelligence, filters.intelligenceMin, filters.intelligenceMax) ||
-        !checkSkillRequirement(item.requirements.defence, filters.defenceMin, filters.defenceMax) ||
-        !checkSkillRequirement(item.requirements.agility, filters.agilityMin, filters.agilityMax)) {
+      !checkSkillRequirement(item.requirements.dexterity, filters.dexterityMin, filters.dexterityMax) ||
+      !checkSkillRequirement(item.requirements.intelligence, filters.intelligenceMin, filters.intelligenceMax) ||
+      !checkSkillRequirement(item.requirements.defence, filters.defenceMin, filters.defenceMax) ||
+      !checkSkillRequirement(item.requirements.agility, filters.agilityMin, filters.agilityMax)) {
       return false;
     }
 
@@ -128,6 +128,21 @@ export const filterItems = (items: (WynncraftItem & { displayName: string })[], 
       }
     }
 
+    // Crafting profession filter
+    if (filters.craftingProfessions.length > 0) {
+      const skills = item.requirements?.skills;
+      if (!skills || !filters.craftingProfessions.some(p => skills.includes(p))) {
+        return false;
+      }
+    }
+
+    // Ingredient tier filter
+    if (filters.ingredientTiers.length > 0) {
+      if (item.type !== 'ingredient' || item.tier === undefined || !filters.ingredientTiers.includes(item.tier)) {
+        return false;
+      }
+    }
+
     return true;
   });
 };
@@ -184,6 +199,9 @@ export const getItemTypeInfo = (item: WynncraftItem): { category: string; type: 
   }
   if (item.accessoryType) {
     return { category: 'accessory', type: item.accessoryType };
+  }
+  if (item.type === 'ingredient') {
+    return { category: 'ingredient', type: 'ingredient' };
   }
   return null;
 };
@@ -396,9 +414,9 @@ export const formatIdentification = (key: string, value: number | { min: number;
   // Time-based suffixes and special unit handling
   const timeSuffix =
     (lowerKey.includes('lifesteal') || lowerKey.includes('lifestyle')) ? '/3s' :
-    lowerKey.includes('manasteal') ? '/3s' :
-    lowerKey.includes('manaregen') ? '/5s' :
-    '';
+      lowerKey.includes('manasteal') ? '/3s' :
+        lowerKey.includes('manaregen') ? '/5s' :
+          '';
 
   // Special cases that should not have %
   const noPercentCases = [
@@ -508,4 +526,47 @@ export const getAllMajorIds = (items: (WynncraftItem & { displayName: string })[
   });
 
   return Array.from(majorIds).sort();
+};
+
+// Ingredient tier helpers
+export const getIngredientTierColor = (tier: number | undefined): string => {
+  switch (tier) {
+    case 0: return '#aaaaaa';   // grey
+    case 1: return '#ffff55';   // yellow
+    case 2: return '#aa00aa';   // purple / dark purple
+    case 3: return '#55ffff';   // light blue
+    default: return '#aaaaaa';
+  }
+};
+
+export const getIngredientTierStars = (tier: number | undefined): string => {
+  if (tier === undefined || tier === 0) return '';
+  const filled = '✫';
+  const empty = '✫';
+  let stars = '[';
+  for (let i = 0; i < 3; i++) {
+    stars += i < tier ? filled : empty;
+  }
+  stars += ']';
+  return stars;
+};
+
+export const getIngredientTierName = (tier: number | undefined): string => {
+  switch (tier) {
+    case 0: return '0 Star';
+    case 1: return '1 Star';
+    case 2: return '2 Star';
+    case 3: return '3 Star';
+    default: return '';
+  }
+};
+
+export const getAllCraftingProfessions = (items: (WynncraftItem & { displayName: string })[]): string[] => {
+  const professions = new Set<string>();
+  items.forEach(item => {
+    if (item.requirements?.skills) {
+      item.requirements.skills.forEach(skill => professions.add(skill));
+    }
+  });
+  return Array.from(professions).sort();
 };

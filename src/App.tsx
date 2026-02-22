@@ -37,7 +37,9 @@ function App() {
     dpsMax: 1300,
     damageElements: [],
     identificationFilters: [],
-    attackSpeed: []
+    attackSpeed: [],
+    craftingProfessions: [],
+    ingredientTiers: []
   });
 
   const filteredItems = useMemo(() => {
@@ -102,7 +104,7 @@ function App() {
           totalCount={itemsArray.length}
         />
 
-        <ItemGrid items={filteredItems}/>
+        <ItemGrid items={filteredItems} />
       </main>
     </div>
   );

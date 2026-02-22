@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { FilterState, WynncraftItem } from '../types.js';
-import { getUniqueValues, getUniqueWeaponTypes, getUniqueArmourTypes, getUniqueAccessoryTypes, getAllIdentificationNames, getDamageElements, getAllMajorIds } from '../utils/filterUtils.js';
+import { getUniqueValues, getUniqueWeaponTypes, getUniqueArmourTypes, getUniqueAccessoryTypes, getAllIdentificationNames, getDamageElements, getAllMajorIds, getAllCraftingProfessions, getIngredientTierColor } from '../utils/filterUtils.js';
 import { IdentificationFilterManager } from './IdentificationFilterManager.js';
 import { MajorIdFilterModal } from './MajorIdFilterModal.js';
 import ColoredIcon from './ColoredIcon.js';
@@ -14,12 +14,12 @@ interface FilterPanelProps {
   onToggle: () => void;
 }
 
-export const FilterPanel: React.FC<FilterPanelProps> = ({ 
-  filters, 
-  setFilters, 
-  items, 
-  isOpen, 
-  onToggle 
+export const FilterPanel: React.FC<FilterPanelProps> = ({
+  filters,
+  setFilters,
+  items,
+  isOpen,
+  onToggle
 }) => {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     itemTypes: false,
@@ -31,7 +31,9 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     dps: false,
     skillPoints: false,
     specialFilters: false,
-    damageElements: false
+    damageElements: false,
+    craftingProfessions: false,
+    ingredientTier: false
   });
   const [showMajorIdModal, setShowMajorIdModal] = useState(false);
 
@@ -105,7 +107,9 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       dpsMax: 1300,
       damageElements: [],
       identificationFilters: [],
-      attackSpeed: []
+      attackSpeed: [],
+      craftingProfessions: [],
+      ingredientTiers: []
     });
   };
 
@@ -310,7 +314,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               </div>
             )}
           </div>
-          
+
           <div className="filter-section">
             <div className="filter-section-header" onClick={() => toggleSection('powderSlots')}>
               <h3>Powder Slots</h3>
@@ -370,7 +374,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               </div>
             )}
           </div>
-          
+
           <div className="filter-section">
             <div className="filter-section-header" onClick={() => toggleSection('skillPoints')}>
               <h3>Skill Points</h3>
@@ -533,7 +537,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                   </button>
                 </div>
                 {filters.hasMajorIds && (
-                  <button 
+                  <button
                     className="select-major-ids-button"
                     onClick={() => setShowMajorIdModal(true)}
                   >
@@ -566,6 +570,55 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                   ))}
                 </div>
               </>
+            )}
+          </div>
+
+          <div className="filter-section">
+            <div className="filter-section-header" onClick={() => toggleSection('craftingProfessions')}>
+              <h3>Crafting Professions</h3>
+              <span className="toggle-icon">{expandedSections.craftingProfessions ? '▼' : '▶'}</span>
+            </div>
+            {expandedSections.craftingProfessions && (
+              <div className="filter-buttons">
+                {getAllCraftingProfessions(items).map(prof => (
+                  <button
+                    key={prof}
+                    className={`filter-button ${filters.craftingProfessions.includes(prof) ? 'active' : ''}`}
+                    onClick={() => handleMultiSelectChange('craftingProfessions', prof)}
+                  >
+                    {prof.charAt(0).toUpperCase() + prof.slice(1)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="filter-section">
+            <div className="filter-section-header" onClick={() => toggleSection('ingredientTier')}>
+              <h3>Ingredient Tier</h3>
+              <span className="toggle-icon">{expandedSections.ingredientTier ? '▼' : '▶'}</span>
+            </div>
+            {expandedSections.ingredientTier && (
+              <div className="filter-buttons">
+                {[0, 1, 2, 3].map(tier => (
+                  <button
+                    key={tier}
+                    className={`filter-button ${filters.ingredientTiers.includes(tier) ? 'active' : ''}`}
+                    onClick={() => {
+                      setFilters(prev => {
+                        const current = prev.ingredientTiers;
+                        const newTiers = current.includes(tier)
+                          ? current.filter(t => t !== tier)
+                          : [...current, tier];
+                        return { ...prev, ingredientTiers: newTiers };
+                      });
+                    }}
+                    style={{ borderLeft: `3px solid ${getIngredientTierColor(tier)}` }}
+                  >
+                    {tier === 0 ? '0 Stars' : `${tier} Star${tier > 1 ? 's' : ''}`}
+                  </button>
+                ))}
+              </div>
             )}
           </div>
           <MajorIdFilterModal

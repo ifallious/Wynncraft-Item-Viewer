@@ -17,6 +17,7 @@ interface WynncraftItem {
     intelligence?: number;
     defence?: number;
     agility?: number;
+    skills?: string[];
   };
   majorIds?: Record<string, string>;
   powderSlots?: number;
@@ -53,6 +54,27 @@ interface WynncraftItem {
   restrictions?: string;
   identified?: boolean;
   tier?: number;
+  // Ingredient-specific fields
+  consumableOnlyIDs?: {
+    duration: number;
+    charges: number;
+  };
+  ingredientPositionModifiers?: {
+    left: number;
+    right: number;
+    above: number;
+    under: number;
+    touching: number;
+    not_touching: number;
+  };
+  itemOnlyIDs?: {
+    durabilityModifier: number;
+    strengthRequirement: number;
+    dexterityRequirement: number;
+    intelligenceRequirement: number;
+    defenceRequirement: number;
+    agilityRequirement: number;
+  };
 }
 
 interface IdentificationFilter {
@@ -91,6 +113,9 @@ interface FilterState {
   damageElements: string[];
   identificationFilters: IdentificationFilter[];
   attackSpeed: string[];
+  // Ingredient-specific filters
+  craftingProfessions: string[];
+  ingredientTiers: number[];
 }
 
 // Explicit exports for verbatimModuleSyntax

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, type JSX } from 'react';
 import { createPortal } from 'react-dom';
 import type { WynncraftItem } from '../types.js';
-import { getRarityColor } from '../utils/filterUtils.js';
+import { getRarityColor, getIngredientTierColor, getIngredientTierStars } from '../utils/filterUtils.js';
 import './ItemDetailsModal.css';
 
 interface ItemDetailsModalProps {
@@ -59,7 +59,9 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
   if (!isOpen || !item) return null;
 
-  const rarityColor = getRarityColor(item.rarity);
+  const isIngredient = item.type === 'ingredient';
+  const rarityColor = isIngredient ? getIngredientTierColor(item.tier) : getRarityColor(item.rarity);
+  const tierStars = isIngredient ? getIngredientTierStars(item.tier) : null;
 
   const formatSingleCoordinate = (coord: number[]): string => {
     if (coord.length >= 4) {
@@ -185,11 +187,16 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
         ref={modalRef}
         className={`item-details-modal ${isPositioned ? 'positioned' : 'positioning'}`}
         onClick={e => e.stopPropagation()}
-        style={{position: 'relative'}}
+        style={{ position: 'relative' }}
       >
         <div className="modal-header">
           <div className="item-title">
-            <h2 style={{ color: rarityColor }}>{item.displayName}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h2 style={{ color: rarityColor, margin: 0 }}>{item.displayName}</h2>
+              {tierStars && (
+                <span style={{ color: rarityColor, fontSize: '1.2rem' }}>{tierStars}</span>
+              )}
+            </div>
             <span className="item-type-badge">{item.type}</span>
           </div>
           <button className="close-button" onClick={onClose}>×</button>
@@ -201,19 +208,42 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
               <span className="label">Level:</span>
               <span className="value">{item.requirements.level}</span>
             </div>
-            {item.rarity && (
-              <div className="summary-row">
-                <span className="label">Rarity:</span>
-                <span className="value" style={{ color: rarityColor }}>
-                  {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
-                </span>
-              </div>
-            )}
-            {item.averageDps && (
-              <div className="summary-row">
-                <span className="label">Average DPS:</span>
-                <span className="value">{item.averageDps}</span>
-              </div>
+            {isIngredient ? (
+              <>
+                {item.tier !== undefined && (
+                  <div className="summary-row">
+                    <span className="label">Tier:</span>
+                    <span className="value" style={{ color: rarityColor }}>
+                      {item.tier === 0 ? '0 Stars' : `${item.tier} Star${item.tier > 1 ? 's' : ''}`}
+                    </span>
+                  </div>
+                )}
+                {item.requirements?.skills && item.requirements.skills.length > 0 && (
+                  <div className="summary-row">
+                    <span className="label">Professions:</span>
+                    <span className="value">
+                      {item.requirements.skills.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}
+                    </span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                {item.rarity && (
+                  <div className="summary-row">
+                    <span className="label">Rarity:</span>
+                    <span className="value" style={{ color: rarityColor }}>
+                      {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
+                    </span>
+                  </div>
+                )}
+                {item.averageDps && (
+                  <div className="summary-row">
+                    <span className="label">Average DPS:</span>
+                    <span className="value">{item.averageDps}</span>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
