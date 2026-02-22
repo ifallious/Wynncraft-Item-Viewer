@@ -1,6 +1,6 @@
 import React from 'react';
 import type { WynncraftItem } from '../types.js';
-import { getRarityColor, formatDamage, formatIdentification, formatIdentificationName, getItemTypeInfo, isSpellCostAttribute, getIngredientTierColor, getIngredientTierStars } from '../utils/filterUtils.js';
+import { getRarityColor, formatDamage, formatIdentification, formatIdentificationName, getItemTypeInfo, isSpellCostAttribute, getIngredientTierColor } from '../utils/filterUtils.js';
 import './ItemCard.css';
 import ColoredIcon from './ColoredIcon';
 interface ItemCardProps {
@@ -68,7 +68,6 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
   // ========================
   if (isIngredient) {
     const tierColor = getIngredientTierColor(item.tier);
-    const tierStars = getIngredientTierStars(item.tier);
 
     // Render ingredient identifications with min-max ranges
     const renderIngredientIdentifications = () => {
@@ -149,7 +148,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       reqMap.forEach(([label, value]) => {
         if (value !== 0) {
           reqs.push(
-            <div key={label} style={{ color: value > 0 ? colorMap.positive : colorMap.negative }}>
+            <div key={label} style={{ color: value < 0 ? colorMap.positive : colorMap.negative }}>
               {value > 0 ? '+' : ''}{value} {label} Min.
             </div>
           );
@@ -163,13 +162,11 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       const skills = item.requirements?.skills;
       return (
         <div style={{ marginTop: 6 }}>
-          <div style={{ color: '#aaaaaa', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ color: '#ff5555' }}>✖</span>
+          <div style={{ color: '#aaaaaa' }}>
             <span>Crafting Lv. Min: {item.requirements.level}</span>
           </div>
           {skills && skills.map(skill => (
-            <div key={skill} style={{ color: '#aaaaaa', marginLeft: 16, display: 'flex', alignItems: 'center', gap: 4 }}>
-              <span style={{ color: '#aaaaaa' }}>✔</span>
+            <div key={skill} style={{ color: '#aaaaaa', marginLeft: 16 }}>
               <span>{skill.charAt(0).toUpperCase() + skill.slice(1)}</span>
             </div>
           ))}
@@ -242,6 +239,23 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       );
     };
 
+    const renderTierStarsNode = () => {
+      if (item.tier === undefined) return null;
+
+      const activeColor = getIngredientTierColor(item.tier);
+      const inactiveColor = getIngredientTierColor(0); // grey
+
+      return (
+        <span style={{ color: inactiveColor, fontSize: 13, marginLeft: 'auto', display: 'flex', gap: 1 }}>
+          [
+          <span style={{ color: item.tier >= 1 ? activeColor : inactiveColor }}>✫</span>
+          <span style={{ color: item.tier >= 2 ? activeColor : inactiveColor }}>✫</span>
+          <span style={{ color: item.tier >= 3 ? activeColor : inactiveColor }}>✫</span>
+          ]
+        </span>
+      );
+    };
+
     return (
       <div
         className="item-card"
@@ -257,13 +271,11 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
         onClick={handleClick}
       >
         {/* Name with tier stars */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-          <span style={{ color: tierColor, fontWeight: 'bold', fontSize: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 2 }}>
+          <span style={{ color: tierColor, fontWeight: 'bold', fontSize: 16, maxWidth: '75%', wordWrap: 'break-word' }}>
             {item.displayName}
           </span>
-          {tierStars && (
-            <span style={{ color: tierColor, fontSize: 13 }}>{tierStars}</span>
-          )}
+          {renderTierStarsNode()}
         </div>
         {/* Subtitle */}
         <div style={{ color: '#aaaaaa', marginBottom: 6, fontSize: 12 }}>

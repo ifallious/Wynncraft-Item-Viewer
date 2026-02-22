@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, type JSX } from 'react';
 import { createPortal } from 'react-dom';
 import type { WynncraftItem } from '../types.js';
-import { getRarityColor, getIngredientTierColor, getIngredientTierStars } from '../utils/filterUtils.js';
+import { getRarityColor, getIngredientTierColor } from '../utils/filterUtils.js';
 import './ItemDetailsModal.css';
 
 interface ItemDetailsModalProps {
@@ -61,7 +61,6 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
 
   const isIngredient = item.type === 'ingredient';
   const rarityColor = isIngredient ? getIngredientTierColor(item.tier) : getRarityColor(item.rarity);
-  const tierStars = isIngredient ? getIngredientTierStars(item.tier) : null;
 
   const formatSingleCoordinate = (coord: number[]): string => {
     if (coord.length >= 4) {
@@ -193,8 +192,14 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
           <div className="item-title">
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <h2 style={{ color: rarityColor, margin: 0 }}>{item.displayName}</h2>
-              {tierStars && (
-                <span style={{ color: rarityColor, fontSize: '1.2rem' }}>{tierStars}</span>
+              {isIngredient && item.tier !== undefined && (
+                <span style={{ color: getIngredientTierColor(0), fontSize: '1.2rem', display: 'flex', gap: 2 }}>
+                  [
+                  <span style={{ color: item.tier >= 1 ? rarityColor : getIngredientTierColor(0) }}>✫</span>
+                  <span style={{ color: item.tier >= 2 ? rarityColor : getIngredientTierColor(0) }}>✫</span>
+                  <span style={{ color: item.tier >= 3 ? rarityColor : getIngredientTierColor(0) }}>✫</span>
+                  ]
+                </span>
               )}
             </div>
             <span className="item-type-badge">{item.type}</span>

@@ -272,6 +272,16 @@ export const formatIdentificationName = (key: string): string => {
     'rawAgility': 'Agility',
     'rawWalkSpeed': 'Walk Speed',
     'rawXpBonus': 'XP Bonus',
+    'charges': 'Charges',
+    'duration': 'Duration',
+    'durability': 'Durability',
+    'effectivenessLeft': 'Effectiveness (Left)',
+    'effectivenessRight': 'Effectiveness (Right)',
+    'effectivenessAbove': 'Effectiveness (Above)',
+    'effectivenessUnder': 'Effectiveness (Under)',
+    'effectivenessTouching': 'Effectiveness (Touching)',
+    'effectivenessNotTouching': 'Effectiveness (Not Touching)',
+    'effectivenessTotal': 'Effectiveness (Total)',
   };
 
   if (specialCases[key]) {
@@ -332,6 +342,16 @@ export const formatIdentificationNameForModal = (key: string): string => {
     'rawAgility': 'Agility',
     'rawWalkSpeed': 'Walk Speed',
     'rawXpBonus': 'XP Bonus',
+    'charges': 'Charges',
+    'duration': 'Duration',
+    'durability': 'Durability',
+    'effectivenessLeft': 'Effectiveness (Left)',
+    'effectivenessRight': 'Effectiveness (Right)',
+    'effectivenessAbove': 'Effectiveness (Above)',
+    'effectivenessUnder': 'Effectiveness (Under)',
+    'effectivenessTouching': 'Effectiveness (Touching)',
+    'effectivenessNotTouching': 'Effectiveness (Not Touching)',
+    'effectivenessTotal': 'Effectiveness (Total)',
   };
 
   if (specialCases[key]) {
@@ -353,7 +373,10 @@ export const formatIdentificationNameForModal = (key: string): string => {
       'agility',
       'healthbonus',
       'jumpheight',
-      'lifesteal'
+      'lifesteal',
+      'charges',
+      'duration',
+      'durability'
     ];
 
     const shouldSkipPercent = noPercentCases.some(case_ => lowerKey.includes(case_));
@@ -385,6 +408,10 @@ export const formatIdentificationNameForModal = (key: string): string => {
     'agility',
     'healthbonus',
     'jumpheight',
+    'charges',
+    'duration',
+    'durability',
+    'effectiveness'
   ];
 
   const shouldSkipPercent = noPercentCases.some(case_ => lowerKey.includes(case_));
@@ -430,6 +457,10 @@ export const formatIdentification = (key: string, value: number | { min: number;
     'agility',
     'healthbonus',
     'jumpheight',
+    'charges',
+    'duration',
+    'durability',
+    'effectiveness'
   ];
 
   // Check if the key contains any of the no-percent cases, or if time-based suffix enforces non-percent
@@ -460,26 +491,35 @@ export const getItemDamageElements = (item: WynncraftItem): string[] => {
 };
 
 export const checkIdentificationFilter = (item: WynncraftItem, filter: IdentificationFilter): boolean => {
-  if (!item.identifications) return false;
+  let value: number | undefined;
 
-  const identification = item.identifications[filter.name];
-  if (identification === undefined) return false;
-
-  let value: number;
-
-  // Handle different identification value formats
-  if (typeof identification === 'number') {
-    value = identification;
-  } else if (typeof identification === 'object' && identification !== null) {
-    if ('min' in identification && 'max' in identification) {
-      // For range values, use the max value
+  // Pseudo-identifications for ingredients
+  if (filter.name === 'charges' && item.consumableOnlyIDs) value = item.consumableOnlyIDs.charges;
+  else if (filter.name === 'duration' && item.consumableOnlyIDs) value = item.consumableOnlyIDs.duration;
+  else if (filter.name === 'durability' && item.itemOnlyIDs) value = item.itemOnlyIDs.durabilityModifier / 1000;
+  else if (filter.name === 'effectivenessLeft' && item.ingredientPositionModifiers) value = item.ingredientPositionModifiers.left;
+  else if (filter.name === 'effectivenessRight' && item.ingredientPositionModifiers) value = item.ingredientPositionModifiers.right;
+  else if (filter.name === 'effectivenessAbove' && item.ingredientPositionModifiers) value = item.ingredientPositionModifiers.above;
+  else if (filter.name === 'effectivenessUnder' && item.ingredientPositionModifiers) value = item.ingredientPositionModifiers.under;
+  else if (filter.name === 'effectivenessTouching' && item.ingredientPositionModifiers) value = item.ingredientPositionModifiers.touching;
+  else if (filter.name === 'effectivenessNotTouching' && item.ingredientPositionModifiers) value = item.ingredientPositionModifiers.not_touching;
+  else if (filter.name === 'effectivenessTotal' && item.ingredientPositionModifiers) {
+    value = item.ingredientPositionModifiers.left +
+      item.ingredientPositionModifiers.right +
+      item.ingredientPositionModifiers.above +
+      item.ingredientPositionModifiers.under +
+      item.ingredientPositionModifiers.touching +
+      item.ingredientPositionModifiers.not_touching;
+  } else if (item.identifications) {
+    const identification = item.identifications[filter.name];
+    if (typeof identification === 'number') {
+      value = identification;
+    } else if (typeof identification === 'object' && identification !== null && 'min' in identification && 'max' in identification) {
       value = identification.max;
-    } else {
-      return false;
     }
-  } else {
-    return false;
   }
+
+  if (value === undefined) return false;
 
   // Apply the filter based on operator
   switch (filter.operator) {
@@ -504,6 +544,20 @@ export const getAllIdentificationNames = (items: (WynncraftItem & { displayName:
       Object.keys(item.identifications).forEach(key => {
         identifications.add(key);
       });
+    }
+    if (item.type === 'ingredient') {
+      if (item.consumableOnlyIDs?.charges !== undefined) identifications.add('charges');
+      if (item.consumableOnlyIDs?.duration !== undefined) identifications.add('duration');
+      if (item.itemOnlyIDs?.durabilityModifier !== undefined) identifications.add('durability');
+      if (item.ingredientPositionModifiers) {
+        identifications.add('effectivenessLeft');
+        identifications.add('effectivenessRight');
+        identifications.add('effectivenessAbove');
+        identifications.add('effectivenessUnder');
+        identifications.add('effectivenessTouching');
+        identifications.add('effectivenessNotTouching');
+        identifications.add('effectivenessTotal');
+      }
     }
   });
 
@@ -537,18 +591,6 @@ export const getIngredientTierColor = (tier: number | undefined): string => {
     case 3: return '#55ffff';   // light blue
     default: return '#aaaaaa';
   }
-};
-
-export const getIngredientTierStars = (tier: number | undefined): string => {
-  if (tier === undefined || tier === 0) return '';
-  const filled = '✫';
-  const empty = '✫';
-  let stars = '[';
-  for (let i = 0; i < 3; i++) {
-    stars += i < tier ? filled : empty;
-  }
-  stars += ']';
-  return stars;
 };
 
 export const getIngredientTierName = (tier: number | undefined): string => {
