@@ -26,6 +26,7 @@ const GROUPS: { key: string; label: string }[] = [
   { key: 'mana', label: 'Mana' },
   { key: 'health', label: 'Health' },
   { key: 'xp-loot', label: 'XP + Loot' },
+  { key: 'ingredients', label: 'Ingredients' },
   { key: 'misc', label: 'Miscellaneous' },
 ];
 
@@ -41,7 +42,7 @@ function categorizeIdentification(idKey: string): string {
 
   // 2) Skillpoints - exclude elemental defenses
   if (isOneOf(k, ['strength', 'dexterity', 'intelligence', 'agility']) ||
-      (k.includes('defence') && !isOneOf(k, ['earthdefence', 'thunderdefence', 'waterdefence', 'firedefence', 'airdefence', 'neutraldefence']))) {
+    (k.includes('defence') && !isOneOf(k, ['earthdefence', 'thunderdefence', 'waterdefence', 'firedefence', 'airdefence', 'neutraldefence']))) {
     return 'skillpoints';
   }
 
@@ -90,7 +91,10 @@ function categorizeIdentification(idKey: string): string {
   // 9) XP + Loot
   if (isOneOf(k, ['xpbonus', 'lootbonus', 'stealing', 'lootquality', 'gatherspeed'])) return 'xp-loot';
 
-  // 10) Misc
+  // 10) Ingredients
+  if (isOneOf(k, ['charges', 'duration', 'durability', 'effectiveness'])) return 'ingredients';
+
+  // 11) Misc
   return 'misc';
 }
 
@@ -121,6 +125,7 @@ export const IdentificationFilterModal: React.FC<IdentificationFilterModalProps>
       'mana': [],
       'health': [],
       'xp-loot': [],
+      'ingredients': [],
       'misc': [],
     };
     availableIdentifications.forEach(id => {
@@ -128,7 +133,7 @@ export const IdentificationFilterModal: React.FC<IdentificationFilterModalProps>
       if (!m[key]) m['misc'].push(id); else m[key].push(id);
     });
     // Sort within groups by formatted name for UX
-    Object.values(m).forEach(list => list.sort((a,b) => formatIdentificationNameForModal(a).localeCompare(formatIdentificationNameForModal(b))));
+    Object.values(m).forEach(list => list.sort((a, b) => formatIdentificationNameForModal(a).localeCompare(formatIdentificationNameForModal(b))));
     return m;
   }, [availableIdentifications]);
 
