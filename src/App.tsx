@@ -35,7 +35,6 @@ function App() {
     powderSlots: [],
     dpsMin: 0,
     dpsMax: 1300,
-    damageElements: [],
     identificationFilters: [],
     attackSpeed: [],
     craftingProfessions: [],
