@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { FilterState, WynncraftItem } from '../types.js';
-import { getUniqueValues, getUniqueWeaponTypes, getUniqueArmourTypes, getUniqueAccessoryTypes, getAllIdentificationNames, getDamageElements, getAllMajorIds, getAllCraftingProfessions, getIngredientTierColor } from '../utils/filterUtils.js';
+import { getUniqueValues, getUniqueWeaponTypes, getUniqueArmourTypes, getUniqueAccessoryTypes, getAllIdentificationNames, getAllMajorIds, getAllCraftingProfessions, getIngredientTierColor } from '../utils/filterUtils.js';
 import { IdentificationFilterManager } from './IdentificationFilterManager.js';
 import { MajorIdFilterModal } from './MajorIdFilterModal.js';
 import ColoredIcon from './ColoredIcon.js';
@@ -31,7 +31,6 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     dps: false,
     skillPoints: false,
     specialFilters: false,
-    damageElements: false,
     craftingProfessions: false,
     ingredientTier: false
   });
@@ -105,7 +104,6 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       powderSlots: [],
       dpsMin: 0,
       dpsMax: 1300,
-      damageElements: [],
       identificationFilters: [],
       attackSpeed: [],
       craftingProfessions: [],
@@ -229,22 +227,18 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </div>
 
           <div className="filter-section">
-            <div className="filter-section-header" onClick={() => toggleSection('rarity')}>
-              <h3>Rarity</h3>
-              <span className="toggle-icon">{expandedSections.rarity ? '▼' : '▶'}</span>
+            <div className="filter-section-header" onClick={() => toggleSection('identifications')}>
+              <h3>Identifications</h3>
+              <span className="toggle-icon">{expandedSections.identifications ? '▼' : '▶'}</span>
             </div>
-            {expandedSections.rarity && (
-              <div className="filter-buttons">
-                {rarities.map(rarity => (
-                  <button
-                    key={rarity}
-                    className={`filter-button ${filters.rarity.includes(rarity) ? 'active' : ''}`}
-                    onClick={() => handleMultiSelectChange('rarity', rarity)}
-                  >
-                    {rarity.charAt(0).toUpperCase() + rarity.slice(1)}
-                  </button>
-                ))}
-              </div>
+            {expandedSections.identifications && (
+              <IdentificationFilterManager
+                filters={filters.identificationFilters}
+                availableIdentifications={getAllIdentificationNames(items)}
+                onFiltersChange={(identificationFilters) =>
+                  setFilters(prev => ({ ...prev, identificationFilters }))
+                }
+              />
             )}
           </div>
 
@@ -280,35 +274,19 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </div>
 
           <div className="filter-section">
-            <div className="filter-section-header" onClick={() => toggleSection('identifications')}>
-              <h3>Identifications</h3>
-              <span className="toggle-icon">{expandedSections.identifications ? '▼' : '▶'}</span>
+            <div className="filter-section-header" onClick={() => toggleSection('rarity')}>
+              <h3>Rarity</h3>
+              <span className="toggle-icon">{expandedSections.rarity ? '▼' : '▶'}</span>
             </div>
-            {expandedSections.identifications && (
-              <IdentificationFilterManager
-                filters={filters.identificationFilters}
-                availableIdentifications={getAllIdentificationNames(items)}
-                onFiltersChange={(identificationFilters) =>
-                  setFilters(prev => ({ ...prev, identificationFilters }))
-                }
-              />
-            )}
-          </div>
-
-          <div className="filter-section">
-            <div className="filter-section-header" onClick={() => toggleSection('attackSpeed')}>
-              <h3>Attack Speed</h3>
-              <span className="toggle-icon">{expandedSections.attackSpeed ? '▼' : '▶'}</span>
-            </div>
-            {expandedSections.attackSpeed && (
+            {expandedSections.rarity && (
               <div className="filter-buttons">
-                {attackSpeeds.map(speed => (
+                {rarities.map(rarity => (
                   <button
-                    key={speed}
-                    className={`filter-button ${filters.attackSpeed.includes(speed) ? 'active' : ''}`}
-                    onClick={() => handleMultiSelectChange('attackSpeed', speed)}
+                    key={rarity}
+                    className={`filter-button ${filters.rarity.includes(rarity) ? 'active' : ''}`}
+                    onClick={() => handleMultiSelectChange('rarity', rarity)}
                   >
-                    {formatAttackSpeed(speed)}
+                    {rarity.charAt(0).toUpperCase() + rarity.slice(1)}
                   </button>
                 ))}
               </div>
@@ -316,61 +294,21 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </div>
 
           <div className="filter-section">
-            <div className="filter-section-header" onClick={() => toggleSection('powderSlots')}>
-              <h3>Powder Slots</h3>
-              <span className="toggle-icon">{expandedSections.powderSlots ? '▼' : '▶'}</span>
+            <div className="filter-section-header" onClick={() => toggleSection('craftingProfessions')}>
+              <h3>Crafting Professions</h3>
+              <span className="toggle-icon">{expandedSections.craftingProfessions ? '▼' : '▶'}</span>
             </div>
-            {expandedSections.powderSlots && (
+            {expandedSections.craftingProfessions && (
               <div className="filter-buttons">
-                {[0, 1, 2, 3, 4, 5].map(slots => (
+                {getAllCraftingProfessions(items).map(prof => (
                   <button
-                    key={slots}
-                    className={`filter-button ${filters.powderSlots.includes(slots.toString()) ? 'active' : ''}`}
-                    onClick={() => handleMultiSelectChange('powderSlots', slots.toString())}
+                    key={prof}
+                    className={`filter-button ${filters.craftingProfessions.includes(prof) ? 'active' : ''}`}
+                    onClick={() => handleMultiSelectChange('craftingProfessions', prof)}
                   >
-                    {slots} slots
+                    {prof.charAt(0).toUpperCase() + prof.slice(1)}
                   </button>
                 ))}
-                <button
-                  key="6+"
-                  className={`filter-button ${filters.powderSlots.includes('6+') ? 'active' : ''}`}
-                  onClick={() => handleMultiSelectChange('powderSlots', '6+')}
-                >
-                  6+ slots
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="filter-section">
-            <div className="filter-section-header" onClick={() => toggleSection('dps')}>
-              <h3>Average DPS</h3>
-              <span className="toggle-icon">{expandedSections.dps ? '▼' : '▶'}</span>
-            </div>
-            {expandedSections.dps && (
-              <div className="range-group">
-                <label>
-                  Min DPS: {filters.dpsMin}
-                  <input
-                    type="range"
-                    min="0"
-                    max="1300"
-                    step="10"
-                    value={filters.dpsMin}
-                    onChange={(e) => handleRangeChange('dpsMin', parseInt(e.target.value))}
-                  />
-                </label>
-                <label>
-                  Max DPS: {filters.dpsMax}
-                  <input
-                    type="range"
-                    min="0"
-                    max="1300"
-                    step="10"
-                    value={filters.dpsMax}
-                    onChange={(e) => handleRangeChange('dpsMax', parseInt(e.target.value))}
-                  />
-                </label>
               </div>
             )}
           </div>
@@ -516,6 +454,59 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </div>
 
           <div className="filter-section">
+            <div className="filter-section-header" onClick={() => toggleSection('attackSpeed')}>
+              <h3>Attack Speed</h3>
+              <span className="toggle-icon">{expandedSections.attackSpeed ? '▼' : '▶'}</span>
+            </div>
+            {expandedSections.attackSpeed && (
+              <div className="filter-buttons">
+                {attackSpeeds.map(speed => (
+                  <button
+                    key={speed}
+                    className={`filter-button ${filters.attackSpeed.includes(speed) ? 'active' : ''}`}
+                    onClick={() => handleMultiSelectChange('attackSpeed', speed)}
+                  >
+                    {formatAttackSpeed(speed)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="filter-section">
+            <div className="filter-section-header" onClick={() => toggleSection('dps')}>
+              <h3>Average DPS</h3>
+              <span className="toggle-icon">{expandedSections.dps ? '▼' : '▶'}</span>
+            </div>
+            {expandedSections.dps && (
+              <div className="range-group">
+                <label>
+                  Min DPS: {filters.dpsMin}
+                  <input
+                    type="range"
+                    min="0"
+                    max="1300"
+                    step="10"
+                    value={filters.dpsMin}
+                    onChange={(e) => handleRangeChange('dpsMin', parseInt(e.target.value))}
+                  />
+                </label>
+                <label>
+                  Max DPS: {filters.dpsMax}
+                  <input
+                    type="range"
+                    min="0"
+                    max="1300"
+                    step="10"
+                    value={filters.dpsMax}
+                    onChange={(e) => handleRangeChange('dpsMax', parseInt(e.target.value))}
+                  />
+                </label>
+              </div>
+            )}
+          </div>
+
+          <div className="filter-section">
             <div className="filter-section-header" onClick={() => toggleSection('specialFilters')}>
               <h3>Special Filters</h3>
               <span className="toggle-icon">{expandedSections.specialFilters ? '▼' : '▶'}</span>
@@ -549,46 +540,28 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </div>
 
           <div className="filter-section">
-            <div className="filter-section-header" onClick={() => toggleSection('damageElements')}>
-              <h3>Damage Elements (Exact Match)</h3>
-              <span className="toggle-icon">{expandedSections.damageElements ? '▼' : '▶'}</span>
+            <div className="filter-section-header" onClick={() => toggleSection('powderSlots')}>
+              <h3>Powder Slots</h3>
+              <span className="toggle-icon">{expandedSections.powderSlots ? '▼' : '▶'}</span>
             </div>
-            {expandedSections.damageElements && (
-              <>
-                <p className="filter-description">
-                  Shows items with exactly the selected elements only
-                </p>
-                <div className="filter-buttons">
-                  {getDamageElements().map(element => (
-                    <button
-                      key={element}
-                      className={`filter-button ${filters.damageElements.includes(element) ? 'active' : ''}`}
-                      onClick={() => handleMultiSelectChange('damageElements', element)}
-                    >
-                      {element.charAt(0).toUpperCase() + element.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-
-          <div className="filter-section">
-            <div className="filter-section-header" onClick={() => toggleSection('craftingProfessions')}>
-              <h3>Crafting Professions</h3>
-              <span className="toggle-icon">{expandedSections.craftingProfessions ? '▼' : '▶'}</span>
-            </div>
-            {expandedSections.craftingProfessions && (
+            {expandedSections.powderSlots && (
               <div className="filter-buttons">
-                {getAllCraftingProfessions(items).map(prof => (
+                {[0, 1, 2, 3, 4, 5].map(slots => (
                   <button
-                    key={prof}
-                    className={`filter-button ${filters.craftingProfessions.includes(prof) ? 'active' : ''}`}
-                    onClick={() => handleMultiSelectChange('craftingProfessions', prof)}
+                    key={slots}
+                    className={`filter-button ${filters.powderSlots.includes(slots.toString()) ? 'active' : ''}`}
+                    onClick={() => handleMultiSelectChange('powderSlots', slots.toString())}
                   >
-                    {prof.charAt(0).toUpperCase() + prof.slice(1)}
+                    {slots} slots
                   </button>
                 ))}
+                <button
+                  key="6+"
+                  className={`filter-button ${filters.powderSlots.includes('6+') ? 'active' : ''}`}
+                  onClick={() => handleMultiSelectChange('powderSlots', '6+')}
+                >
+                  6+ slots
+                </button>
               </div>
             )}
           </div>

@@ -110,7 +110,6 @@ interface FilterState {
   powderSlots: string[];
   dpsMin: number;
   dpsMax: number;
-  damageElements: string[];
   identificationFilters: IdentificationFilter[];
   attackSpeed: string[];
   // Ingredient-specific filters

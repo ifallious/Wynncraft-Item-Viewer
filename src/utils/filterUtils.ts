@@ -105,19 +105,6 @@ export const filterItems = (items: (WynncraftItem & { displayName: string })[], 
       return false;
     }
 
-    // Damage elements filter - exact match
-    if (filters.damageElements.length > 0) {
-      const itemElements = getItemDamageElements(item);
-
-      // Check if the item has exactly the selected elements (no more, no less)
-      const hasExactElements = filters.damageElements.length === itemElements.length &&
-        filters.damageElements.every(element => itemElements.includes(element)) &&
-        itemElements.every(element => filters.damageElements.includes(element));
-
-      if (!hasExactElements) {
-        return false;
-      }
-    }
 
     // Identification filters
     if (filters.identificationFilters.length > 0) {
