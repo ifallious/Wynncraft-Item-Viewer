@@ -246,7 +246,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       const inactiveColor = getIngredientTierColor(0); // grey
 
       return (
-        <span style={{ color: inactiveColor, fontSize: 13, marginLeft: 'auto', display: 'flex', gap: 1 }}>
+        <span style={{ color: activeColor, fontSize: 13, marginLeft: 'auto' }}>
           [
           <span style={{ color: item.tier >= 1 ? activeColor : inactiveColor }}>✫</span>
           <span style={{ color: item.tier >= 2 ? activeColor : inactiveColor }}>✫</span>

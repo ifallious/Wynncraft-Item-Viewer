@@ -193,7 +193,7 @@ export const ItemDetailsModal: React.FC<ItemDetailsModalProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <h2 style={{ color: rarityColor, margin: 0 }}>{item.displayName}</h2>
               {isIngredient && item.tier !== undefined && (
-                <span style={{ color: getIngredientTierColor(0), fontSize: '1.2rem', display: 'flex', gap: 2 }}>
+                <span style={{ color: rarityColor, fontSize: '1.2rem' }}>
                   [
                   <span style={{ color: item.tier >= 1 ? rarityColor : getIngredientTierColor(0) }}>✫</span>
                   <span style={{ color: item.tier >= 2 ? rarityColor : getIngredientTierColor(0) }}>✫</span>
