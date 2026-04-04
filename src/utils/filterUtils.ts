@@ -1,5 +1,54 @@
 import type { WynncraftItem, FilterState, IdentificationFilter } from '../types.js';
 
+const DEFAULT_LEVEL_MAX = 999;
+const DEFAULT_DPS_MAX = 99999;
+
+export interface FilterBounds {
+  maxLevel: number;
+  maxDps: number;
+}
+
+export const createDefaultFilters = (): FilterState => ({
+  search: '',
+  type: [],
+  rarity: [],
+  levelMin: 1,
+  levelMax: DEFAULT_LEVEL_MAX,
+  weaponTypes: [],
+  armourTypes: [],
+  accessoryTypes: [],
+  strengthMin: 0,
+  strengthMax: 150,
+  dexterityMin: 0,
+  dexterityMax: 150,
+  intelligenceMin: 0,
+  intelligenceMax: 150,
+  defenceMin: 0,
+  defenceMax: 150,
+  agilityMin: 0,
+  agilityMax: 150,
+  hasIdentifications: false,
+  hasMajorIds: false,
+  selectedMajorIds: [],
+  powderSlots: [],
+  dpsMin: 0,
+  dpsMax: DEFAULT_DPS_MAX,
+  identificationFilters: [],
+  attackSpeed: [],
+  craftingProfessions: [],
+  ingredientTiers: []
+});
+
+export const getFilterBounds = (items: (WynncraftItem & { displayName: string })[]): FilterBounds => {
+  const maxLevel = Math.max(1, ...items.map(item => item.requirements?.level ?? 0));
+  const maxDpsValue = Math.max(0, ...items.map(item => item.averageDps ?? 0));
+
+  return {
+    maxLevel,
+    maxDps: Math.max(100, Math.ceil(maxDpsValue / 10) * 10)
+  };
+};
+
 export const filterItems = (items: (WynncraftItem & { displayName: string })[], filters: FilterState): (WynncraftItem & { displayName: string })[] => {
   return items.filter(item => {
     // Search filter
@@ -100,7 +149,7 @@ export const filterItems = (items: (WynncraftItem & { displayName: string })[], 
       if (item.averageDps < filters.dpsMin || item.averageDps > filters.dpsMax) {
         return false;
       }
-    } else if (filters.dpsMin > 0 || filters.dpsMax < 1300) {
+    } else if (filters.dpsMin > 0 || filters.dpsMax < DEFAULT_DPS_MAX) {
       // If item has no DPS but we're filtering for DPS, exclude it
       return false;
     }

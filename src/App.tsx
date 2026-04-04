@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import type { FilterState } from './types.js';
 import { useItemData } from './hooks/useItemData.js';
-import { filterItems } from './utils/filterUtils.js';
+import { createDefaultFilters, filterItems, getFilterBounds } from './utils/filterUtils.js';
 import { FilterPanel } from './components/FilterPanel.js';
 import { SearchBar } from './components/SearchBar.js';
 import { ItemGrid } from './components/ItemGrid.js';
@@ -10,36 +10,8 @@ import './App.css';
 function App() {
   const { itemsArray, loading, error } = useItemData();
   const [filterPanelOpen, setFilterPanelOpen] = useState(true);
-  const [filters, setFilters] = useState<FilterState>({
-    search: '',
-    type: [],
-    rarity: [],
-    levelMin: 1,
-    levelMax: 110,
-    weaponTypes: [],
-    armourTypes: [],
-    accessoryTypes: [],
-    strengthMin: 0,
-    strengthMax: 150,
-    dexterityMin: 0,
-    dexterityMax: 150,
-    intelligenceMin: 0,
-    intelligenceMax: 150,
-    defenceMin: 0,
-    defenceMax: 150,
-    agilityMin: 0,
-    agilityMax: 150,
-    hasIdentifications: false,
-    hasMajorIds: false,
-    selectedMajorIds: [],
-    powderSlots: [],
-    dpsMin: 0,
-    dpsMax: 1300,
-    identificationFilters: [],
-    attackSpeed: [],
-    craftingProfessions: [],
-    ingredientTiers: []
-  });
+  const [filters, setFilters] = useState<FilterState>(() => createDefaultFilters());
+  const filterBounds = useMemo(() => getFilterBounds(itemsArray), [itemsArray]);
 
   const filteredItems = useMemo(() => {
     return filterItems(itemsArray, filters);
@@ -80,6 +52,7 @@ function App() {
         filters={filters}
         setFilters={setFilters}
         items={itemsArray}
+        filterBounds={filterBounds}
         isOpen={filterPanelOpen}
         onToggle={() => setFilterPanelOpen(!filterPanelOpen)}
       />

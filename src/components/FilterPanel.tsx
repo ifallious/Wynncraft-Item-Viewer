@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { FilterState, WynncraftItem } from '../types.js';
-import { getUniqueValues, getUniqueWeaponTypes, getUniqueArmourTypes, getUniqueAccessoryTypes, getAllIdentificationNames, getAllMajorIds, getAllCraftingProfessions, getIngredientTierColor } from '../utils/filterUtils.js';
+import { createDefaultFilters, type FilterBounds, getUniqueValues, getUniqueWeaponTypes, getUniqueArmourTypes, getUniqueAccessoryTypes, getAllIdentificationNames, getAllMajorIds, getAllCraftingProfessions, getIngredientTierColor } from '../utils/filterUtils.js';
 import { IdentificationFilterManager } from './IdentificationFilterManager.js';
 import { MajorIdFilterModal } from './MajorIdFilterModal.js';
 import ColoredIcon from './ColoredIcon.js';
@@ -10,6 +10,7 @@ interface FilterPanelProps {
   filters: FilterState;
   setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
   items: (WynncraftItem & { displayName: string })[];
+  filterBounds: FilterBounds;
   isOpen: boolean;
   onToggle: () => void;
 }
@@ -18,6 +19,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
   filters,
   setFilters,
   items,
+  filterBounds,
   isOpen,
   onToggle
 }) => {
@@ -49,6 +51,8 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
   const armourTypes = getUniqueArmourTypes(items);
   const accessoryTypes = getUniqueAccessoryTypes(items);
   const attackSpeeds = getUniqueValues(items, 'attackSpeed');
+  const displayedLevelMax = Math.min(filters.levelMax, filterBounds.maxLevel);
+  const displayedDpsMax = Math.min(filters.dpsMax, filterBounds.maxDps);
 
   const formatAttackSpeed = (speed: string) => {
     return speed.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -79,36 +83,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
   };
 
   const resetFilters = () => {
-    setFilters({
-      search: '',
-      type: [],
-      rarity: [],
-      levelMin: 1,
-      levelMax: 110,
-      weaponTypes: [],
-      armourTypes: [],
-      accessoryTypes: [],
-      strengthMin: 0,
-      strengthMax: 150,
-      dexterityMin: 0,
-      dexterityMax: 150,
-      intelligenceMin: 0,
-      intelligenceMax: 150,
-      defenceMin: 0,
-      defenceMax: 150,
-      agilityMin: 0,
-      agilityMax: 150,
-      hasIdentifications: false,
-      hasMajorIds: false,
-      selectedMajorIds: [],
-      powderSlots: [],
-      dpsMin: 0,
-      dpsMax: 1300,
-      identificationFilters: [],
-      attackSpeed: [],
-      craftingProfessions: [],
-      ingredientTiers: []
-    });
+    setFilters(createDefaultFilters());
   };
 
   return (
@@ -254,18 +229,18 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                   <input
                     type="range"
                     min="1"
-                    max="110"
+                    max={filterBounds.maxLevel}
                     value={filters.levelMin}
                     onChange={(e) => handleRangeChange('levelMin', parseInt(e.target.value))}
                   />
                 </label>
                 <label>
-                  Max: {filters.levelMax}
+                  Max: {displayedLevelMax}
                   <input
                     type="range"
                     min="1"
-                    max="110"
-                    value={filters.levelMax}
+                    max={filterBounds.maxLevel}
+                    value={displayedLevelMax}
                     onChange={(e) => handleRangeChange('levelMax', parseInt(e.target.value))}
                   />
                 </label>
@@ -485,20 +460,20 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                   <input
                     type="range"
                     min="0"
-                    max="1300"
+                    max={filterBounds.maxDps}
                     step="10"
                     value={filters.dpsMin}
                     onChange={(e) => handleRangeChange('dpsMin', parseInt(e.target.value))}
                   />
                 </label>
                 <label>
-                  Max DPS: {filters.dpsMax}
+                  Max DPS: {displayedDpsMax}
                   <input
                     type="range"
                     min="0"
-                    max="1300"
+                    max={filterBounds.maxDps}
                     step="10"
-                    value={filters.dpsMax}
+                    value={displayedDpsMax}
                     onChange={(e) => handleRangeChange('dpsMax', parseInt(e.target.value))}
                   />
                 </label>

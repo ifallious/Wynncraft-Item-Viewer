@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { WynncraftItem } from '../types.js';
 import { mockItems } from '../api/mockData.js';
+import { normalizeWynncraftItems } from '../utils/itemNormalization.js';
 
 interface UseItemDataReturn {
   items: Record<string, WynncraftItem>;
@@ -27,14 +28,14 @@ export const useItemData = (): UseItemDataReturn => {
         }
         
         const data = await response.json() as Record<string, WynncraftItem>;
-        setItems(data);
+        setItems(normalizeWynncraftItems(data));
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to fetch items';
         console.error('Error fetching items:', err);
         // Fallback to mock data so the app remains usable offline or when API fails
         try {
           if (mockItems && Object.keys(mockItems).length > 0) {
-            setItems(mockItems as Record<string, WynncraftItem>);
+            setItems(normalizeWynncraftItems(mockItems as Record<string, WynncraftItem>));
             setError(`Using mock data: ${errorMessage}`);
           } else {
             setError(errorMessage);
@@ -50,9 +51,9 @@ export const useItemData = (): UseItemDataReturn => {
     fetchItems();
   }, []);
 
-  const itemsArray = Object.entries(items).map(([name, item]) => ({
+  const itemsArray = Object.values(items).map(item => ({
     ...item,
-    displayName: name
+    displayName: item.displayName || item.internalName
   }));
 
   return {
