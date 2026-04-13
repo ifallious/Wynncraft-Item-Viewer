@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { WynncraftItem } from '../types.js';
 import { mockItems } from '../api/mockData.js';
-import { normalizeWynncraftItems } from '../utils/itemNormalization.js';
+import { normalizeWynncraftItems, normalizeWynncraftItemsToArray } from '../utils/itemNormalization.js';
 
 interface UseItemDataReturn {
   items: Record<string, WynncraftItem>;
@@ -20,14 +20,13 @@ export const useItemData = (): UseItemDataReturn => {
       try {
         setLoading(true);
         setError(null);
-        
         const response = await fetch('/api/items');
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
-        const data = await response.json() as Record<string, WynncraftItem>;
+
+        const data = await response.json() as WynncraftItem[] | Record<string, WynncraftItem>;
         setItems(normalizeWynncraftItems(data));
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to fetch items';
@@ -51,10 +50,7 @@ export const useItemData = (): UseItemDataReturn => {
     fetchItems();
   }, []);
 
-  const itemsArray = Object.values(items).map(item => ({
-    ...item,
-    displayName: item.displayName || item.internalName
-  }));
+  const itemsArray = normalizeWynncraftItemsToArray(Object.values(items));
 
   return {
     items,

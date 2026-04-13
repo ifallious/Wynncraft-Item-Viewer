@@ -1,10 +1,13 @@
 import type { WynncraftItem } from '../types.js';
 
+export type NormalizedWynncraftItem = WynncraftItem & { displayName: string };
+
 type RawRequirements = Partial<WynncraftItem['requirements']> & {
   class_requirement?: string;
 };
 
-type RawWynncraftItem = Partial<Omit<WynncraftItem, 'displayName' | 'requirements' | 'rarity' | 'tier' | 'restrictions'>> & {
+export type RawWynncraftItem = Partial<Omit<WynncraftItem, 'displayName' | 'requirements' | 'rarity' | 'tier' | 'restrictions'>> & {
+  displayName?: string;
   requirements?: RawRequirements;
   subType?: string;
   rarity?: string;
@@ -13,6 +16,8 @@ type RawWynncraftItem = Partial<Omit<WynncraftItem, 'displayName' | 'requirement
   restrictions?: string;
   averageDPS?: number;
 };
+
+type RawWynncraftItemCollection = Record<string, RawWynncraftItem> | RawWynncraftItem[];
 
 const ATTACK_SPEED_SEPARATOR = /([a-z])([A-Z])/g;
 const HTML_LINE_BREAK = /<br\s*\/?>/gi;
@@ -111,13 +116,14 @@ const normalizeRequirements = (requirements: RawRequirements | undefined): Wynnc
 export const normalizeWynncraftItem = (
   displayName: string,
   rawItem: RawWynncraftItem
-): WynncraftItem & { displayName: string } => {
+): NormalizedWynncraftItem => {
   const itemType = normalizeString(rawItem.type)?.toLowerCase() ?? 'unknown';
   const subtypeFields = normalizeSubtype(itemType, rawItem);
+  const normalizedDisplayName = normalizeString(rawItem.displayName ?? displayName) ?? 'Unknown Item';
 
   return {
-    displayName,
-    internalName: rawItem.internalName ?? displayName,
+    displayName: normalizedDisplayName,
+    internalName: rawItem.internalName ?? normalizedDisplayName,
     type: itemType,
     weaponType: subtypeFields.weaponType,
     armourType: subtypeFields.armourType,
@@ -144,13 +150,23 @@ export const normalizeWynncraftItem = (
   };
 };
 
+export const normalizeWynncraftItemsToArray = (
+  items: RawWynncraftItemCollection
+): NormalizedWynncraftItem[] => {
+  if (Array.isArray(items)) {
+    return items.map((rawItem, index) => {
+      const fallbackDisplayName = normalizeString(rawItem.displayName ?? rawItem.internalName) ?? `item-${index}`;
+      return normalizeWynncraftItem(fallbackDisplayName, rawItem);
+    });
+  }
+
+  return Object.entries(items).map(([displayName, rawItem]) => normalizeWynncraftItem(displayName, rawItem));
+};
+
 export const normalizeWynncraftItems = (
-  items: Record<string, RawWynncraftItem>
+  items: RawWynncraftItemCollection
 ): Record<string, WynncraftItem> => {
   return Object.fromEntries(
-    Object.entries(items).map(([displayName, rawItem]) => [
-      displayName,
-      normalizeWynncraftItem(displayName, rawItem),
-    ])
+    normalizeWynncraftItemsToArray(items).map((item) => [item.displayName, item])
   );
 };
